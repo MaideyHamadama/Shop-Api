@@ -1,4 +1,4 @@
-package com.shop.backend.controller;
+package unused;
 
 import java.util.List;
 
@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.shop.backend.Repository.AdminRepository;
 import com.shop.backend.classe.Category;
-import com.shop.backend.classe.Order;
 import com.shop.backend.classe.Product;
 
 @RestController

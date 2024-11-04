@@ -1,4 +1,4 @@
-package com.shop.backend.classe;
+package unused;
 
 import java.time.LocalDate;
 

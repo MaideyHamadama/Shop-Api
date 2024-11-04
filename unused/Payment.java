@@ -1,4 +1,4 @@
-package com.shop.backend.classe;
+package unused;
 
 public class Payment {
     private int paymentID;

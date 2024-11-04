@@ -2,26 +2,21 @@ package com.shop.backend.classe;
 
 public class ProductVariant {
     private int idVariant;
-    private double price;
     private Color color;
     private Size size;
     private SleeveType sleeveType;
-    private SizeType sizeType;
+
+    // Suppression de la variable sizeType car liée avec size pas ProductVariant
+    // Suppression de la variable price car dans Product et pas dans ProductVariant
 
     // Constructor
-    public ProductVariant(int id, Color color, Size size, SleeveType sleeveType,double price, SizeType sizeType) {
+    public ProductVariant(int id, Color color, Size size, SleeveType sleeveType) {
         this.idVariant = id;
         this.color = color;
         this.size = size;
         this.sleeveType = sleeveType;
-        this.sizeType = sizeType;
-        this.price = price;
     }
 
-    // Getter for price
-    public double getPrice() {
-        return price;
-    }
 
     public int getIdVariant() {
         return idVariant;
@@ -39,7 +34,5 @@ public class ProductVariant {
         return sleeveType;
     }
 
-    public SizeType getSizeType() {
-        return sizeType;
-    }
 }
+

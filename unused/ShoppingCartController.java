@@ -1,11 +1,9 @@
-package com.shop.backend.controller;
+package unused;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.shop.backend.Repository.ShoppingCartRepository;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/cart")

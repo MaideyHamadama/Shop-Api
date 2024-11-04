@@ -1,4 +1,6 @@
-package com.shop.backend.classe;
+package unused;
+
+import com.shop.backend.classe.ProductVariant;
 
 public class ShoppingCartLine {
     private ProductVariant variant;

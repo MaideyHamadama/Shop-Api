@@ -10,15 +10,17 @@ public class Product {
     private List<ProductImage> images;
     private List<ProductVariant> variants;
     private Brand brand;
+    private Category category;
 
     // Constructor
-    public Product(int id, String name, double price, Brand brand) {
+    public Product(int id, String name, double price, Brand brand, Category category) {
         this.idProduct = id;
         this.productName = name;
         this.price = price;
         this.brand = brand;
         this.images = new ArrayList<>();
         this.variants = new ArrayList<>();
+        this.category = category;
     }
 
     public void addImage(ProductImage image) {
@@ -28,6 +30,8 @@ public class Product {
     public void addVariant(ProductVariant variant) {
         variants.add(variant);
     }
+
+    /* Getters */
 
     public int getIdProduct() {
         return idProduct;
@@ -39,6 +43,10 @@ public class Product {
 
     public double getPrice() {
         return price;
+    }
+
+    public Category getCategory() {
+        return category;
     }
 
     public List<ProductImage> getImages() {

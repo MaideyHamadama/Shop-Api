@@ -1,4 +1,6 @@
-package com.shop.backend.classe;
+package unused;
+
+import com.shop.backend.classe.Product;
 
 public class Admin extends User {
     private int adminID;

@@ -1,4 +1,7 @@
-package com.shop.backend.classe;
+package unused;
+
+import com.shop.backend.classe.ProductVariant;
+
 public class StockLine {
     private ProductVariant variant;
     private int quantity;

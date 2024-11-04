@@ -1,4 +1,6 @@
-package com.shop.backend.classe;
+package unused;
+
+import com.shop.backend.classe.Product;
 
 public class Visitor {
     protected String role;
