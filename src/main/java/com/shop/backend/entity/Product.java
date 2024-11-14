@@ -24,6 +24,8 @@ public class Product {
 
     @Column(name = "price", nullable = false)
     private double price;
+    @Column(name = "description", nullable = false)
+    private String description;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProductImage> images = new ArrayList<>();
@@ -52,13 +54,15 @@ public class Product {
      * @param price       The price of the product.
      * @param brand       The {@link Brand} associated with this product.
      * @param category    The {@link Category} of the product.
+     * @param description The description of the product.
      */
-    public Product(int idProduct, String productName, double price, Brand brand, Category category) {
+    public Product(int idProduct, String productName, double price, String description ,Brand brand, Category category) {
         this.idProduct = idProduct;
         this.productName = productName;
         this.price = price;
         this.brand = brand;
         this.category = category;
+        this.description = description;
     }
 
     /**
@@ -117,6 +121,14 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<ProductImage> getImages() {
