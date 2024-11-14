@@ -1,6 +1,8 @@
 package com.shop.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,8 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "brand_id", nullable = false)
+    //@JsonManagedReference avoids an infinite loop during JSON serialization
+    @JsonManagedReference
     private Brand brand;
 
     @Enumerated(EnumType.STRING)
@@ -32,13 +36,17 @@ public class Product {
     private Category category;
 
     // Constructor
-    
+
     public Product(int idProduct, String productName, double price, Brand brand, Category category) {
         this.idProduct = idProduct;
         this.productName = productName;
         this.price = price;
         this.brand = brand;
         this.category = category;
+    }
+
+    public Product() {
+
     }
 
     public void addImage(ProductImage image) {
@@ -107,7 +115,6 @@ public class Product {
     public void setCategory(Category category) {
         this.category = category;
     }
-    
 
-  
+
 }

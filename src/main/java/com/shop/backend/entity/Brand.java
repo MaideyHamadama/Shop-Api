@@ -1,6 +1,8 @@
 package com.shop.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +17,18 @@ public class Brand {
     private String brandName;
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // @JsonBackReference avoids an infinite loop during JSON serialization
+    @JsonBackReference
     private List<Product> products = new ArrayList<>();
 
     // Constructor,
     public Brand(int idBrand, String brandName) {
         this.idBrand = idBrand;
         this.brandName = brandName;
+    }
+
+    public Brand() {
+
     }
 
     // Getters, and Setters
@@ -48,8 +56,5 @@ public class Brand {
         this.products = products;
     }
 
-    
-    
 
-    
 }
