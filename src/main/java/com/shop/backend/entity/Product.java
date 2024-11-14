@@ -27,8 +27,9 @@ public class Product {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ProductImage> images = new ArrayList<>();
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference // Avoids an infinite loop during JSON serialization
+    private ProductImage image;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProductVariant> variants = new ArrayList<>();
@@ -76,12 +77,12 @@ public class Product {
     // ===========================
 
     /**
-     * Adds an image to the product and sets the product reference in the image.
+     * Adds the image for the product and sets the product reference in the image.
      *
      * @param image The {@link ProductImage} to add.
      */
     public void addImage(ProductImage image) {
-        images.add(image);
+        this.image = image;
         image.setProduct(this);
     }
 
@@ -98,6 +99,10 @@ public class Product {
     // ===========================
     //        Getters & Setters
     // ===========================
+
+    public String getImageURL() {
+        return image.getImageURL();
+    }
 
     public int getIdProduct() {
         return idProduct;
@@ -131,12 +136,12 @@ public class Product {
         this.description = description;
     }
 
-    public List<ProductImage> getImages() {
-        return images;
+    public ProductImage getImage() {
+        return image;
     }
 
-    public void setImages(List<ProductImage> images) {
-        this.images = images;
+    public void setImage(ProductImage image) {
+        this.image = image;
     }
 
     public List<ProductVariant> getVariants() {

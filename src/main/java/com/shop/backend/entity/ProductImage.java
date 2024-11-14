@@ -1,5 +1,6 @@
 package com.shop.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 /**
@@ -15,15 +16,16 @@ public class ProductImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idProdImage;
 
-    @Column(name = "imageURL", nullable = false)
+    @Column(name = "image_URL", nullable = false)
     private String imageURL;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "color", nullable = false)
     private Color color;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "product_id", nullable = true)
+    @JsonBackReference // Avoids an infinite loop during JSON serialization
     private Product product;
 
     // ===========================
@@ -85,4 +87,3 @@ public class ProductImage {
         this.product = product;
     }
 }
-
