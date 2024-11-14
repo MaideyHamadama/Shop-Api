@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+/**
+ * Controller for managing {@link Category} entities.
+ * Provides endpoints to retrieve and interact with product categories.
+ */
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {

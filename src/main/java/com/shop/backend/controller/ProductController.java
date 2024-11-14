@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller for managing {@link Product} entities.
+ * Provides endpoints to retrieve and interact with products.
+ */
 @RestController
 @RequestMapping("/products")
 public class ProductController {

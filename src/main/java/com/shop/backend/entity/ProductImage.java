@@ -2,9 +2,15 @@ package com.shop.backend.entity;
 
 import jakarta.persistence.*;
 
+/**
+ * Entity representing an image associated with a {@link Product}.
+ * This class is mapped to the "ProductImage" table and includes attributes for
+ * image ID, image URL, color, and the associated product.
+ */
 @Entity
 @Table(name = "ProductImage")
 public class ProductImage {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idProdImage;
@@ -20,19 +26,33 @@ public class ProductImage {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    // Constructor,
+    // ===========================
+    //        Constructors
+    // ===========================
 
+    /**
+     * Full constructor to create a ProductImage instance with all attributes.
+     *
+     * @param idProdImage The unique identifier for the product image.
+     * @param imageURL    The URL of the image.
+     * @param color       The {@link Color} associated with the image.
+     */
     public ProductImage(int idProdImage, String imageURL, Color color) {
         this.idProdImage = idProdImage;
         this.imageURL = imageURL;
         this.color = color;
     }
 
+    /**
+     * Default constructor for JPA.
+     */
     public ProductImage() {
-
     }
 
-    // Getters, and Setters
+    // ===========================
+    //        Getters & Setters
+    // ===========================
+
     public int getIdProdImage() {
         return idProdImage;
     }
@@ -64,6 +84,5 @@ public class ProductImage {
     public void setProduct(Product product) {
         this.product = product;
     }
-
-
 }
+

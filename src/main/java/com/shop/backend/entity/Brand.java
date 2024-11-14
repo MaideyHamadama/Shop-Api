@@ -6,9 +6,15 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entity representing a Brand in the database.
+ * This class is mapped to the "Brand" table and includes attributes for
+ * brand ID, brand name, and a list of products associated with the brand.
+ */
 @Entity
 @Table(name = "Brand")
 public class Brand {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idBrand;
@@ -17,21 +23,34 @@ public class Brand {
     private String brandName;
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    // @JsonBackReference avoids an infinite loop during JSON serialization
-    @JsonBackReference
+    @JsonBackReference // Avoids an infinite loop during JSON serialization
     private List<Product> products = new ArrayList<>();
 
-    // Constructor,
+    // ===========================
+    //        Constructors
+    // ===========================
+
+    /**
+     * Full constructor to create a Brand instance with all attributes.
+     *
+     * @param idBrand   The unique identifier for the brand.
+     * @param brandName The name of the brand.
+     */
     public Brand(int idBrand, String brandName) {
         this.idBrand = idBrand;
         this.brandName = brandName;
     }
 
+    /**
+     * Default constructor for JPA.
+     */
     public Brand() {
-
     }
 
-    // Getters, and Setters
+    // ===========================
+    //        Getters & Setters
+    // ===========================
+
     public int getIdBrand() {
         return idBrand;
     }
@@ -55,6 +74,4 @@ public class Brand {
     public void setProducts(List<Product> products) {
         this.products = products;
     }
-
-
 }

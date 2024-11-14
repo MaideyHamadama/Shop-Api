@@ -2,9 +2,16 @@ package com.shop.backend.entity;
 
 import jakarta.persistence.*;
 
+
+/**
+ * Entity representing a specific variant of a {@link Product}.
+ * This class is mapped to the "ProductVariant" table and includes attributes for
+ * variant ID, color, size, sleeve type, and the associated product.
+ */
 @Entity
 @Table(name = "ProductVariant")
 public class ProductVariant {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idVariant;
@@ -25,7 +32,18 @@ public class ProductVariant {
     @Column(name = "sleeveType", nullable = false)
     private SleeveType sleeveType;
 
-    // Constructor,
+    // ===========================
+    //        Constructors
+    // ===========================
+
+    /**
+     * Full constructor to create a ProductVariant instance with all attributes.
+     *
+     * @param idVariant  The unique identifier for the product variant.
+     * @param color      The {@link Color} of the variant.
+     * @param size       The {@link Size} of the variant.
+     * @param sleeveType The {@link SleeveType} of the variant.
+     */
     public ProductVariant(int idVariant, Color color, Size size, SleeveType sleeveType) {
         this.idVariant = idVariant;
         this.color = color;
@@ -33,9 +51,15 @@ public class ProductVariant {
         this.sleeveType = sleeveType;
     }
 
+    /**
+     * Default constructor for JPA.
+     */
     public ProductVariant() {
-
     }
+
+    // ===========================
+    //        Getters & Setters
+    // ===========================
 
     public int getIdVariant() {
         return idVariant;
@@ -76,8 +100,4 @@ public class ProductVariant {
     public void setSleeveType(SleeveType sleeveType) {
         this.sleeveType = sleeveType;
     }
-
-    //  Getters, and Setters
-
-
 }

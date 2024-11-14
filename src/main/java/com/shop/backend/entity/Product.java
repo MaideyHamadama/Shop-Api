@@ -6,9 +6,15 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entity representing a Product in the database.
+ * This class is mapped to the "Product" table and includes attributes for
+ * product ID, name, price, brand, category, and associated images and variants.
+ */
 @Entity
 @Table(name = "Product")
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idProduct;
@@ -27,16 +33,26 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "brand_id", nullable = false)
-    //@JsonManagedReference avoids an infinite loop during JSON serialization
-    @JsonManagedReference
+    @JsonManagedReference // Avoids an infinite loop during JSON serialization
     private Brand brand;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
     private Category category;
 
-    // Constructor
+    // ===========================
+    //        Constructors
+    // ===========================
 
+    /**
+     * Full constructor to create a Product instance with all attributes.
+     *
+     * @param idProduct   The unique identifier for the product.
+     * @param productName The name of the product.
+     * @param price       The price of the product.
+     * @param brand       The {@link Brand} associated with this product.
+     * @param category    The {@link Category} of the product.
+     */
     public Product(int idProduct, String productName, double price, Brand brand, Category category) {
         this.idProduct = idProduct;
         this.productName = productName;
@@ -45,21 +61,40 @@ public class Product {
         this.category = category;
     }
 
+    /**
+     * Default constructor for JPA.
+     */
     public Product() {
-
     }
 
+    // ===========================
+    //          Methods
+    // ===========================
+
+    /**
+     * Adds an image to the product and sets the product reference in the image.
+     *
+     * @param image The {@link ProductImage} to add.
+     */
     public void addImage(ProductImage image) {
         images.add(image);
         image.setProduct(this);
     }
 
+    /**
+     * Adds a variant to the product and sets the product reference in the variant.
+     *
+     * @param variant The {@link ProductVariant} to add.
+     */
     public void addVariant(ProductVariant variant) {
         variants.add(variant);
         variant.setProduct(this);
     }
 
-    /* Getters et Setters */
+    // ===========================
+    //        Getters & Setters
+    // ===========================
+
     public int getIdProduct() {
         return idProduct;
     }
@@ -115,6 +150,4 @@ public class Product {
     public void setCategory(Category category) {
         this.category = category;
     }
-
-
 }
