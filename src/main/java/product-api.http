@@ -2,32 +2,14 @@
 
 GET http://localhost:8080/products
 
-### US1 :  GET request to list categories
+### GET request to list categories
 
 GET http://localhost:8080/categories
 
-### US2 : GET request to list products by category
+### GET request to list products by category (MEN)
 
-GET http://localhost:8080/products/categories/MEN
+GET http://localhost:8080/categories/MEN/products
 
-###
+### GET request to list products by category (BOY)
 
-GET http://localhost:8080/variants
-
-###
-
-GET http://localhost:8080/variants/1
-
-###
-
-GET http://localhost:8080/variants/color/RED
-
-###
-
-GET http://localhost:8080/variants/size/S
-
-###
-
-GET http://localhost:8080/variants/sleeve-type/SHORT
-
-###
+GET http://localhost:8080/categories/BOY/products
