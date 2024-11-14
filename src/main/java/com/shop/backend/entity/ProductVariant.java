@@ -25,12 +25,16 @@ public class ProductVariant {
     @Column(name = "sleeveType", nullable = false)
     private SleeveType sleeveType;
 
-     // Constructor,
+    // Constructor,
     public ProductVariant(int idVariant, Color color, Size size, SleeveType sleeveType) {
         this.idVariant = idVariant;
         this.color = color;
         this.size = size;
         this.sleeveType = sleeveType;
+    }
+
+    public ProductVariant() {
+
     }
 
     public int getIdVariant() {
@@ -74,6 +78,6 @@ public class ProductVariant {
     }
 
     //  Getters, and Setters
-    
-    
+
+
 }

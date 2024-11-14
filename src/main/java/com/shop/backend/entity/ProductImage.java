@@ -28,6 +28,10 @@ public class ProductImage {
         this.color = color;
     }
 
+    public ProductImage() {
+
+    }
+
     // Getters, and Setters
     public int getIdProdImage() {
         return idProdImage;
@@ -61,6 +65,5 @@ public class ProductImage {
         this.product = product;
     }
 
-    
-    
+
 }
