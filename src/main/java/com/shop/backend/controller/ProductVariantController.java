@@ -1,11 +1,6 @@
-package com.shop.backend.controller;
+/*package com.shop.backend.controller;
 
-import com.shop.backend.classe.SleeveType;
-import com.shop.backend.classe.SizeType;
-import com.shop.backend.classe.Color;
-import com.shop.backend.classe.Size;
-import com.shop.backend.classe.ProductVariant;
-
+import com.shop.backend.entity.ProductVariant;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -85,3 +80,4 @@ public class ProductVariantController {
         }
     }
 }
+*/
