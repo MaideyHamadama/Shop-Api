@@ -1,5 +1,5 @@
 package com.shop.backend.entity;
 
 public enum Color {
-    BLUE, GREEN, RED, MULTICOLOR, UNDEFINED
+   BLACK, BLUE, GREEN, RED, ORANGE, GREY, PINK, WHITE, YELLOW, MULTICOLOR, UNDEFINED
 }
