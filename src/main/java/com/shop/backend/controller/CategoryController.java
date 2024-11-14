@@ -57,9 +57,6 @@ public class CategoryController {
         }
 
         List<Product> products = productRepository.findByCategory(category);
-        if (products.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
         return ResponseEntity.ok().body(products);
     }
 }
