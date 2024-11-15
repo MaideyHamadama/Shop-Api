@@ -36,7 +36,7 @@ VALUES (11, 'T-shirt Fille Black', 17.99, 'A comfy black short-sleeve T-shirt fo
 INSERT INTO product_image (id_prod_image, image_url, color, product_id)
 VALUES (1, '/images/Men/Black_O_long-sleeve.jpg', 'BLACK', 1),
        (2, '/images/Men/BurntBrick_O_long-sleeve.jpg', 'ORANGE', 2),
-       (3, '/images/Men/DarkGrey_O_long-sleeve.jpg', 'GREY', 3),
+       (3, '', 'GREY', 3),
        (4, '/images/Men/DeepBlue_O_long-sleeve.jpg', 'BLUE', 4),
        (5, '/images/Men/Surf_O_long-sleeve.jpg', 'MULTICOLOR', 5);
 
