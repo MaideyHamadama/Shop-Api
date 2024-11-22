@@ -1,5 +1,6 @@
 package com.shop.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -12,6 +13,8 @@ import java.util.List;
  * product ID, name, price, brand, category, and associated images and variants.
  */
 @Entity
+// Ligne a enlever une fois les DTO implémentés
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "Product")
 public class Product {
 
