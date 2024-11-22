@@ -35,8 +35,12 @@ public class User {
     @Column(name = "city")
     private String city;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Order> orders = new ArrayList<>();
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+    private ShoppingCart shoppingCart;
+
+
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<Order> orders = new ArrayList<>();
 
     // ===========================
     //        Constructors
@@ -114,16 +118,9 @@ public class User {
         this.city = city;
     }
 
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
-
-    public void addOrder(Order order) {
-        this.orders.add(order);
-        order.setUser(this);
-    }
+//
+//    public void addOrder(Order order) {
+//        this.orders.add(order);
+//        order.setUser(this);
+//    }
 }
