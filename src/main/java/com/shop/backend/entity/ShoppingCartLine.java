@@ -1,5 +1,7 @@
 package com.shop.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 /**
@@ -15,11 +17,13 @@ public class ShoppingCartLine {
     private Long id;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "variant_id", nullable = false) // Foreign key to ProductVariant
-    private ProductVariant variant;
+    @JoinColumn(name = "product_id", nullable = false) // Foreign key to ProductVariant
+    @JsonManagedReference // Gestion de la relation avec le produit pour JSON
+    private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shopping_cart_id", nullable = false) // Foreign key to ShoppingCart
+    @JsonBackReference // Ceci empêche la sérialisation du lien vers le parent
     private ShoppingCart shoppingCart;
 
     @Column(name = "quantity", nullable = false)
@@ -35,11 +39,11 @@ public class ShoppingCartLine {
     public ShoppingCartLine() {
     }
 
-    public ShoppingCartLine(ProductVariant variant, int quantity, ShoppingCart shoppingCart) {
-        this.variant = variant;
+    public ShoppingCartLine(Product product, int quantity, ShoppingCart shoppingCart) {
+        this.product = product;
         this.quantity = quantity;
         this.shoppingCart = shoppingCart;
-        this.totalPrice = variant.getProduct().getPrice() * quantity;
+        this.totalPrice = product.getPrice() * quantity;
     }
 
     // ===========================
@@ -51,14 +55,6 @@ public class ShoppingCartLine {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public ProductVariant getVariant() {
-        return variant;
-    }
-
-    public void setVariant(ProductVariant variant) {
-        this.variant = variant;
     }
 
     public ShoppingCart getShoppingCart() {
@@ -75,7 +71,15 @@ public class ShoppingCartLine {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-        this.totalPrice = variant.getProduct().getPrice() * quantity;
+        this.totalPrice = product.getPrice() * quantity;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public double getTotalPrice() {
@@ -90,7 +94,7 @@ public class ShoppingCartLine {
     public String toString() {
         return "ShoppingCartLine{" +
                 "id=" + id +
-                ", variant=" + variant +
+                ", product=" + product +
                 ", shoppingCart=" + shoppingCart +
                 ", quantity=" + quantity +
                 ", totalPrice=" + totalPrice +

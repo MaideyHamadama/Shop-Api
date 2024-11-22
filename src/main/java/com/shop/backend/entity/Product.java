@@ -31,9 +31,6 @@ public class Product {
     @JsonManagedReference // Avoids an infinite loop during JSON serialization
     private ProductImage image;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ProductVariant> variants = new ArrayList<>();
-
     @ManyToOne
     @JoinColumn(name = "brand_id", nullable = false)
     @JsonManagedReference // Avoids an infinite loop during JSON serialization
@@ -76,6 +73,8 @@ public class Product {
     //          Methods
     // ===========================
 
+    //TODO Deplacer dans service
+
     /**
      * Adds the image for the product and sets the product reference in the image.
      *
@@ -86,15 +85,6 @@ public class Product {
         image.setProduct(this);
     }
 
-    /**
-     * Adds a variant to the product and sets the product reference in the variant.
-     *
-     * @param variant The {@link ProductVariant} to add.
-     */
-    public void addVariant(ProductVariant variant) {
-        variants.add(variant);
-        variant.setProduct(this);
-    }
 
     // ===========================
     //        Getters & Setters
@@ -142,14 +132,6 @@ public class Product {
 
     public void setImage(ProductImage image) {
         this.image = image;
-    }
-
-    public List<ProductVariant> getVariants() {
-        return variants;
-    }
-
-    public void setVariants(List<ProductVariant> variants) {
-        this.variants = variants;
     }
 
     public Brand getBrand() {
