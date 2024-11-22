@@ -1,4 +1,8 @@
 package com.shop.backend.repository;
 
-public interface ShoppingCartLineRepository {
+import com.shop.backend.entity.ShoppingCart;
+import com.shop.backend.entity.ShoppingCartLine;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ShoppingCartLineRepository  extends JpaRepository<ShoppingCartLine, Integer> {
 }

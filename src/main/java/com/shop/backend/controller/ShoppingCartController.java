@@ -4,6 +4,7 @@ import com.shop.backend.entity.ShoppingCart;
 import com.shop.backend.entity.ShoppingCartLine;
 import com.shop.backend.entity.Product;
 import com.shop.backend.entity.User;
+import com.shop.backend.repository.ShoppingCartLineRepository;
 import com.shop.backend.repository.ShoppingCartRepository;
 import com.shop.backend.repository.ProductRepository;
 import com.shop.backend.repository.UserRepository;
@@ -24,13 +25,17 @@ public class ShoppingCartController {
 
     private final ProductRepository productRepository;
 
+    private final ShoppingCartLineRepository shoppingCartLineRepository;
+
     private final UserRepository userRepository;
 
     public ShoppingCartController(ShoppingCartService shoppingCartService, ShoppingCartRepository shoppingCartRepository,
+                                  ShoppingCartLineRepository shoppingCartLineRepository,
                                   ProductRepository productRepository, UserRepository userRepository) {
         this.shoppingCartService = shoppingCartService;
         this.shoppingCartRepository = shoppingCartRepository;
         this.productRepository = productRepository;
+        this.shoppingCartLineRepository = shoppingCartLineRepository;
         this.userRepository = userRepository;
     }
 
@@ -175,6 +180,7 @@ public class ShoppingCartController {
 
         // Supprimer la ligne du panier
         cart.getCartProducts().remove(lineToRemove);
+        shoppingCartLineRepository.delete(lineToRemove); // Supprime la ligne de la base de données
 
         // Calculer le montant total du panier après suppression
         double totalAmount = cart.getCartProducts().stream()
@@ -199,7 +205,17 @@ public class ShoppingCartController {
         // Récupérer le panier
         ShoppingCart cart = shoppingCartRepository.findById(cartId)
                 .orElseThrow(() -> new RuntimeException("Panier non trouvé avec l'ID: " + cartId));
+        if (cart.getCartProducts().isEmpty()) {
+            return ResponseEntity.noContent().build(); // Retourner un statut 204 si le panier est vide
+        }
 
+        // Force le chargement des relations paresseuses
+        cart.getCartProducts().forEach(cartLine -> {
+            cartLine.getProduct().getIdProduct(); // Force le chargement du produit
+            if (cartLine.getProduct().getBrand() != null) {
+                cartLine.getProduct().getBrand().getBrandName(); // Force le chargement de la marque
+            }
+        });
         // Retourner le panier avec ses lignes de produits et le prix total
         return ResponseEntity.ok(cart);
     }
