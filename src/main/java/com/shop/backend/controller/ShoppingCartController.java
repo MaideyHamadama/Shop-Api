@@ -3,6 +3,7 @@ package com.shop.backend.controller;
 import com.shop.backend.entity.ShoppingCart;
 import com.shop.backend.entity.ShoppingCartLine;
 import com.shop.backend.entity.Product;
+import com.shop.backend.entity.User;
 import com.shop.backend.repository.ShoppingCartRepository;
 import com.shop.backend.repository.ProductRepository;
 import com.shop.backend.repository.UserRepository;
@@ -31,6 +32,24 @@ public class ShoppingCartController {
         this.shoppingCartRepository = shoppingCartRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+    }
+
+    @PostMapping("/new")
+    public ResponseEntity<ShoppingCart> newCart(@RequestParam(required = false) Integer userId) {
+        User user = null;
+
+        // Rechercher l'utilisateur si userId est fourni
+        if (userId != null) {
+            user = userRepository.findById(userId).orElse(null);
+            if (user == null) {
+                return ResponseEntity.badRequest().body(null); // Retourner une erreur si l'utilisateur n'existe pas
+            }
+        }
+
+        // Créer un panier via le service
+        ShoppingCart cart = shoppingCartService.createCart(user);
+
+        return ResponseEntity.ok(cart); // Retourner le panier créé
     }
 
     /**
