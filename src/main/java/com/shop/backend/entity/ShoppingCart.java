@@ -1,5 +1,6 @@
 package com.shop.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +14,13 @@ public class ShoppingCart {
     @Column(name = "cartID")
     private int cartID;
 
-    @ManyToOne
-    @JoinColumn(name = "userID", nullable = false)
+    // UserId peut etre null si l'utilisateur est un visiteur
+    @OneToOne
+    @JoinColumn(name = "userID", nullable = true)
     private User user;
 
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference // Ceci évite la récursion infinie
     private List<ShoppingCartLine> cartProducts = new ArrayList<>();
 
     @Column(name = "cartTotalPrice")
@@ -29,6 +32,7 @@ public class ShoppingCart {
     // ==========================
 
     public ShoppingCart() {
+        this.cartTotalPrice = 0.0;
     }
 
     public ShoppingCart(User user) {
@@ -36,22 +40,6 @@ public class ShoppingCart {
         this.cartTotalPrice = 0.0;
     }
 
-    // ==========================
-    //      Methods
-    // ==========================
-
-    public void addProduct(ShoppingCartLine line) {
-        line.setShoppingCart(this); // Set the reference to the current ShoppingCart
-        cartProducts.add(line);
-        cartTotalPrice += line.getTotalPrice();
-    }
-    
-    public void removeProduct(ShoppingCartLine line) {
-        line.setShoppingCart(null); // Clear the reference
-        cartProducts.remove(line);
-        cartTotalPrice -= line.getTotalPrice();
-    }
-    
     // ==========================
     //      Getters & Setters
     // ==========================
