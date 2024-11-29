@@ -20,7 +20,6 @@ public class ShoppingCart {
     private User user;
 
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference // Ceci évite la récursion infinie
     private List<ShoppingCartLine> cartProducts = new ArrayList<>();
 
     @Column(name = "cartTotalPrice")

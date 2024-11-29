@@ -1,7 +1,5 @@
 package com.shop.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 /**
@@ -18,20 +16,17 @@ public class ShoppingCartLine {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false) // Foreign key to ProductVariant
-    @JsonManagedReference // Gestion de la relation avec le produit pour JSON
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shopping_cart_id", nullable = false) // Foreign key to ShoppingCart
-    @JsonBackReference // Ceci empêche la sérialisation du lien vers le parent
     private ShoppingCart shoppingCart;
 
     @Column(name = "quantity", nullable = false)
     private int quantity;
-    
+
     @Column(name = "total_price", nullable = false)
     private double totalPrice;
-    
 
     // ===========================
     //      Constructors

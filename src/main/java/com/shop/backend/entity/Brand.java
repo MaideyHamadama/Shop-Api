@@ -23,7 +23,6 @@ public class Brand {
     private String brandName;
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference // Avoids an infinite loop during JSON serialization
     private List<Product> products = new ArrayList<>();
 
     // ===========================
