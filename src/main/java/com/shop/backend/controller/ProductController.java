@@ -2,7 +2,6 @@ package com.shop.backend.controller;
 
 import com.shop.backend.entity.Product;
 import com.shop.backend.dto.ProductDTO;
-import com.shop.backend.repository.ProductRepository;
 import com.shop.backend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +16,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-
-    @Autowired
-    private ProductRepository productRepository;
 
     @Autowired
     private ProductService productService;
