@@ -16,8 +16,6 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idProduct;
 
-    private int availableQuantity;
-
     @Column(name = "productName", nullable = false)
     private String productName;
 
