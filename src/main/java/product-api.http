@@ -1,36 +1,36 @@
 ### GET request to list all products
 
-GET http://localhost:8080/products
+GET http://localhost:8090/products
 
 ### GET request to list categories
 
-GET http://localhost:8080/categories
+GET http://localhost:8090/categories
 
 ### GET request to list products by category (MEN)
 
-GET http://localhost:8080/categories/MEN/products
+GET http://localhost:8090/categories/MEN/products
 
 ### GET request to list products by category (BOY)
 
-GET http://localhost:8080/categories/BOY/products
+GET http://localhost:8090/categories/BOY/products
 
 ###
 
-POST http://localhost:8080/cart/new
+POST http://localhost:8090/cart/new
 
 ### Non fonctionelle tant que le user n'est pas créé
 
-POST http://localhost:8080/cart/new?userId=1
+POST http://localhost:8090/cart/new?userId=1
 
 ###
-POST http://localhost:8080/cart/1/add?productId=1&quantity=2
+POST http://localhost:8090/cart/1/add?productId=1&quantity=2
 
 ###
-DELETE http://localhost:8080/cart/1/remove?productId=1
+DELETE http://localhost:8090/cart/1/remove?productId=1
 
 ###
-PUT http://localhost:8080/cart/1/update?productId=1&quantity=3
+PUT http://localhost:8090/cart/1/update?productId=1&quantity=3
 
 ###
 
-GET http://localhost:8080/cart/1
+GET http://localhost:8090/cart/1
