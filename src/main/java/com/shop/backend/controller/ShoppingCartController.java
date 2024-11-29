@@ -1,21 +1,27 @@
 package com.shop.backend.controller;
 
+import com.shop.backend.dto.ProductCartRequest;
+import com.shop.backend.dto.ProductQuantityRequest;
 import com.shop.backend.dto.ShoppingCartDTO;
+import com.shop.backend.dto.UserCartRequest;
+import com.shop.backend.entity.ShoppingCart;
 import com.shop.backend.service.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/carts")
 public class ShoppingCartController {
 
     @Autowired
     private ShoppingCartService shoppingCartService;
 
-    @PostMapping("/new")
-    public ResponseEntity<ShoppingCartDTO> newCart(@RequestParam(required = false) Integer userId) {
-        return ResponseEntity.ok(new ShoppingCartDTO(shoppingCartService.createNewCart(userId)));
+    @PostMapping
+    public ResponseEntity<ShoppingCartDTO> newCart(@RequestBody(required = false) UserCartRequest userCartRequest) {
+        Integer userId = (userCartRequest != null) ? userCartRequest.getUserId() : null;
+        ShoppingCartDTO cartDTO = new ShoppingCartDTO(shoppingCartService.createNewCart(userId));
+        return ResponseEntity.ok(cartDTO);
     }
 
     /**
@@ -26,17 +32,17 @@ public class ShoppingCartController {
      * @param quantity  La quantité du produit à ajouter
      * @return Le panier mis à jour
      */
-    @PostMapping("/add")
+    @PostMapping("/{cartId}/products")
     public ResponseEntity<ShoppingCartDTO> addToCart(
-            @RequestParam(required = false) Integer cartId, // CartId extrait de la query string
-            @RequestParam int productId,
-            @RequestParam int quantity,
-            @RequestParam(required = false) Integer userId) {
-        ShoppingCartDTO updatedCart = shoppingCartService.addProductToCart(cartId, productId, quantity, userId);
+            @PathVariable(required = false) Integer cartId,
+            @RequestBody ProductCartRequest productCartRequest) {
+        ShoppingCartDTO updatedCart = shoppingCartService.addProductToCart(
+                cartId,
+                productCartRequest.getProductId(),
+                productCartRequest.getQuantity(),
+                productCartRequest.getUserId());
         return ResponseEntity.ok(updatedCart);
     }
-
-
 
 
     /**
@@ -47,9 +53,15 @@ public class ShoppingCartController {
      * @param quantity  La nouvelle quantité
      * @return Le panier mis à jour
      */
-    @PutMapping("/{cartId}/update")
-    public ResponseEntity<ShoppingCartDTO> updateQuantity(@PathVariable int cartId, @RequestParam int productId, @RequestParam int quantity) {
-        ShoppingCartDTO updatedCart = shoppingCartService.updateProductQuantity(cartId, productId, quantity);
+    @PutMapping("/{cartId}/products/{productId}")
+    public ResponseEntity<ShoppingCartDTO> updateQuantity(
+            @PathVariable int cartId,
+            @PathVariable int productId,
+            @RequestBody ProductQuantityRequest productQuantityRequest) {
+        ShoppingCartDTO updatedCart = shoppingCartService.updateProductQuantity(
+                cartId,
+                productId,
+                productQuantityRequest.getQuantity());
         return ResponseEntity.ok(updatedCart);
     }
 
@@ -60,11 +72,19 @@ public class ShoppingCartController {
      * @param productId L'ID du produit à retirer
      * @return Le panier mis à jour
      */
-    @DeleteMapping("/{cartId}/remove")
-    public ResponseEntity<ShoppingCartDTO> removeFromCart(@PathVariable int cartId, @RequestParam int productId) {
-        ShoppingCartDTO updatedCart = shoppingCartService.removeProductFromCart(cartId, productId);
+    @DeleteMapping("/{cartId}/products/{productId}")
+    public ResponseEntity<ShoppingCartDTO> removeProductFromCart(@PathVariable int cartId, @PathVariable int productId) {
+        shoppingCartService.removeProductFromCart(cartId, productId);
+        ShoppingCart cart = shoppingCartService.getShoppingCartById(cartId);
+
+        if (cart.getCartProducts().isEmpty()) {
+            return ResponseEntity.noContent().build(); // Panier vide
+        }
+
+        ShoppingCartDTO updatedCart = new ShoppingCartDTO(cart);
         return ResponseEntity.ok(updatedCart);
     }
+
 
     /**
      * Récupérer un panier par son ID

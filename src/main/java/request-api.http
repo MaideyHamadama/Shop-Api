@@ -1,36 +1,65 @@
-### GET request to list all products
-
+### Récupérer la liste de tous les produits
 GET http://localhost:8090/products
 
-### GET request to list categories
-
+### Récupérer la liste des catégories
 GET http://localhost:8090/categories
 
-### GET request to list products by category (MEN)
-
+### Récupérer les produits d'une catégorie (MEN)
 GET http://localhost:8090/categories/MEN/products
 
-### GET request to list products by category (BOY)
-
+### Récupérer les produits d'une catégorie (BOY)
 GET http://localhost:8090/categories/BOY/products
 
-###
+### Créer un nouveau panier sans utilisateur
+POST http://localhost:8090/carts
+Content-Type: application/json
 
-POST http://localhost:8090/cart/new
+{
+  "userId": null
+}
 
-### Non fonctionelle tant que le user n'est pas créé
+### Créer un nouveau panier pour un utilisateur
+POST http://localhost:8090/carts
+Content-Type: application/json
 
-POST http://localhost:8090/cart/new?userId=1
+{
+  "userId": 1
+}
 
-###
-POST http://localhost:8090/cart/add?cartId=2&productId=1&quantity=2
+### Ajouter un produit à un panier existant
+POST http://localhost:8090/carts/1/products
+Content-Type: application/json
 
-###
-DELETE http://localhost:8090/cart/1/remove?productId=1
+{
+  "productId": 1,
+  "quantity": 2,
+  "userId": null
+}
 
-###
-PUT http://localhost:8090/cart/1/update?productId=1&quantity=3
+### Ajouter un produit à un panier existant
+POST http://localhost:8090/carts/1/products
+Content-Type: application/json
 
-###
+{
+  "productId": 2,
+  "quantity": 4,
+  "userId": null
+}
 
-GET http://localhost:8090/cart/1
+### Mettre à jour la quantité d'un produit dans un panier
+PUT http://localhost:8090/carts/1/products/1
+Content-Type: application/json
+
+{
+  "quantity": 30
+}
+
+### Supprimer un produit d'un panier
+DELETE http://localhost:8090/carts/1/products/1
+
+### Supprimer un produit d'un panier
+DELETE http://localhost:8090/carts/1/products/2
+
+### Récupérer un panier par son ID
+GET http://localhost:8090/carts/1
+

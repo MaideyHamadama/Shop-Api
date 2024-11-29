@@ -12,7 +12,7 @@ public class ShoppingCartLine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "line_id")
-    private Long id;
+    private int id;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false) // Foreign key to ProductVariant
@@ -55,11 +55,11 @@ public class ShoppingCartLine {
     // ===========================
     //      Getters & Setters
     // ===========================
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

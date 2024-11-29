@@ -4,7 +4,7 @@ import com.shop.backend.entity.ShoppingCartLine;
 
 public class ShoppingCartLineDTO {
 
-    private Long id;
+    private int id;
     private int productId;
     private int quantity;
     private double totalPrice; // TTC
@@ -20,16 +20,18 @@ public class ShoppingCartLineDTO {
      * @param line The ShoppingCartLine entity to map.
      */
     public ShoppingCartLineDTO(ShoppingCartLine line) {
+        this.id = line.getId();
+        this.productId = line.getProduct().getIdProduct();
         this.quantity = line.getQuantity();
         this.totalPrice = line.getTotalPrice(); // TTC
         this.totalPriceExcludingVAT = line.getTotalPriceExcludingVAT(); // HT
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
