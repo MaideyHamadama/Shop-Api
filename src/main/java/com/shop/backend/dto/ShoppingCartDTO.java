@@ -5,6 +5,7 @@ import com.shop.backend.entity.ShoppingCartLine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ShoppingCartDTO {
 
@@ -12,6 +13,8 @@ public class ShoppingCartDTO {
     private Integer userId;
     private List<ShoppingCartLineDTO> cartProducts;
     private double cartTotalPrice;
+    private double cartTotalPriceExcludingVAT;
+    private double tvaRate;
 
     public ShoppingCartDTO() {
     }
@@ -19,18 +22,16 @@ public class ShoppingCartDTO {
     /**
      * Constructor that initializes the ShoppingCartDTO from a ShoppingCart entity.
      *
-     * @param shoppingCart The ShoppingCart entity to map.
+     * @param cart The ShoppingCart entity to map.
      */
-    public ShoppingCartDTO(ShoppingCart shoppingCart) {
-        this.cartID = shoppingCart.getCartID();
-        this.userId = shoppingCart.getUser() != null ? shoppingCart.getUser().getUserID() : null;
-
-        this.cartProducts = new ArrayList<>();
-        for (ShoppingCartLine line : shoppingCart.getCartProducts()) {
-            this.cartProducts.add(new ShoppingCartLineDTO(line));
-        }
-
-        this.cartTotalPrice = shoppingCart.getCartTotalPrice();
+    public ShoppingCartDTO(ShoppingCart cart) {
+        this.cartID = cart.getCartID();
+        this.cartTotalPrice = cart.getCartTotalPrice();
+        this.cartTotalPriceExcludingVAT = cart.getCartTotalPriceExcludingVAT();
+        this.cartProducts = cart.getCartProducts().stream()
+                .map(ShoppingCartLineDTO::new)
+                .collect(Collectors.toList());
+        this.tvaRate = cart.getTvaRate();
     }
 
     public int getCartID() {
@@ -63,6 +64,18 @@ public class ShoppingCartDTO {
 
     public void setCartTotalPrice(double cartTotalPrice) {
         this.cartTotalPrice = cartTotalPrice;
+    }
+
+    public double getCartTotalPriceExcludingVAT() {
+        return cartTotalPriceExcludingVAT;
+    }
+
+    public void setCartTotalPriceExcludingVAT(double cartTotalPriceExcludingVAT) {
+        this.cartTotalPriceExcludingVAT = cartTotalPriceExcludingVAT;
+    }
+
+    public double getTvaRate() {
+        return tvaRate;
     }
 }
 

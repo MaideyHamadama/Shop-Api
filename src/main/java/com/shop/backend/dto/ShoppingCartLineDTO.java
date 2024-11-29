@@ -7,7 +7,9 @@ public class ShoppingCartLineDTO {
     private Long id;
     private int productId;
     private int quantity;
-    private double totalPrice;
+    private double totalPrice; // TTC
+    private double totalPriceExcludingVAT; // HT
+
 
     public ShoppingCartLineDTO() {
     }
@@ -15,13 +17,12 @@ public class ShoppingCartLineDTO {
     /**
      * Constructor that initializes the ShoppingCartLineDTO from a ShoppingCartLine entity.
      *
-     * @param shoppingCartLine The ShoppingCartLine entity to map.
+     * @param line The ShoppingCartLine entity to map.
      */
-    public ShoppingCartLineDTO(ShoppingCartLine shoppingCartLine) {
-        this.id = shoppingCartLine.getId();
-        this.productId = shoppingCartLine.getProduct().getIdProduct();
-        this.quantity = shoppingCartLine.getQuantity();
-        this.totalPrice = shoppingCartLine.getTotalPrice();
+    public ShoppingCartLineDTO(ShoppingCartLine line) {
+        this.quantity = line.getQuantity();
+        this.totalPrice = line.getTotalPrice(); // TTC
+        this.totalPriceExcludingVAT = line.getTotalPriceExcludingVAT(); // HT
     }
 
     public Long getId() {
@@ -54,6 +55,14 @@ public class ShoppingCartLineDTO {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public double getTotalPriceExcludingVAT() {
+        return totalPriceExcludingVAT;
+    }
+
+    public void setTotalPriceExcludingVAT(double totalPriceExcludingVAT) {
+        this.totalPriceExcludingVAT = totalPriceExcludingVAT;
     }
 }
 

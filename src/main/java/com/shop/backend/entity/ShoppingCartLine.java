@@ -29,15 +29,26 @@ public class ShoppingCartLine {
     private double totalPrice;
 
     // ===========================
+    //           Methods
+    // ===========================
+
+    // Méthode pour calculer le prix HT (hors TVA)
+    public double getTotalPriceExcludingVAT() {
+        double tvaRate = shoppingCart.getTvaRate(); // Récupérer le taux du panier
+        return totalPrice / (1 + tvaRate); // Calcul HT
+    }
+
+
+    // ===========================
     //      Constructors
     // ===========================
     public ShoppingCartLine() {
     }
 
-    public ShoppingCartLine(Product product, int quantity, ShoppingCart shoppingCart) {
+    public ShoppingCartLine(ShoppingCart cart, Product product, int quantity) {
         this.product = product;
+        this.shoppingCart = cart;
         this.quantity = quantity;
-        this.shoppingCart = shoppingCart;
         this.totalPrice = product.getPrice() * quantity;
     }
 
@@ -83,6 +94,10 @@ public class ShoppingCartLine {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public double getTvaRate() {
+        return shoppingCart.getTvaRate();
     }
 
     @Override

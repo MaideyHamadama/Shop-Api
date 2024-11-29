@@ -21,6 +21,7 @@ public class Product {
 
     @Column(name = "price", nullable = false)
     private double price;
+
     @Column(name = "description", nullable = false)
     private String description;
 

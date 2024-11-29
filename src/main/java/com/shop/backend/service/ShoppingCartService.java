@@ -40,10 +40,18 @@ public class ShoppingCartService {
     }
 
     private void reCalculateTotalPrice(ShoppingCart cart) {
-        cart.setCartTotalPrice(cart.getCartProducts().stream()
-                .mapToDouble(ShoppingCartLine::getTotalPrice)
-                .sum());
+        double totalWithVAT = cart.getCartProducts().stream()
+                .mapToDouble(ShoppingCartLine::getTotalPrice) // Total TTC
+                .sum();
+
+        double totalExcludingVAT = cart.getCartProducts().stream()
+                .mapToDouble(ShoppingCartLine::getTotalPriceExcludingVAT) // Total HT
+                .sum();
+
+        cart.setCartTotalPrice(totalWithVAT); // Enregistrer le total TTC
+        cart.setCartTotalPriceExcludingVAT(totalExcludingVAT); // Enregistrer le total HT
     }
+
 
     private ShoppingCartLine findProductInCart(ShoppingCart cart, int productId) {
         return cart.getCartProducts().stream()
@@ -54,14 +62,23 @@ public class ShoppingCartService {
 
     private ShoppingCartLine findOrCreateCartLine(ShoppingCart cart, Product product, int quantity) {
         ShoppingCartLine line = findProductInCart(cart, product.getIdProduct());
+        double productPrice = product.getPrice(); // Prix unitaire du produit TTC (avec TVA)
+        double tvaRate = cart.getTvaRate(); // Récupérer le taux de TVA du panier
+
         if (line == null) {
-            line = new ShoppingCartLine(product, quantity, cart);
+            double totalPrice = productPrice * quantity; // Prix TTC pour la quantité
+            line = new ShoppingCartLine(cart, product, quantity);
+            line.setTotalPrice(totalPrice);
             cart.getCartProducts().add(line);
         } else {
             line.setQuantity(line.getQuantity() + quantity);
+            double totalPrice = productPrice * line.getQuantity(); // Recalculer le prix TTC
+            line.setTotalPrice(totalPrice);
         }
+
         return line;
     }
+
 
     public ShoppingCart createNewCart(Integer userId) {
         ShoppingCart cart;
