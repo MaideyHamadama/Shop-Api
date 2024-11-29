@@ -15,11 +15,7 @@ public class ShoppingCartController {
 
     @PostMapping("/new")
     public ResponseEntity<ShoppingCartDTO> newCart(@RequestParam(required = false) Integer userId) {
-        // Créer un nouveau panier pour un utilisateur (ou un visiteur)
-        ShoppingCartDTO cartDTO = userId != null
-                ? shoppingCartService.getOrCreateCartForUser(userId)
-                : shoppingCartService.createCartForVisitor();
-        return ResponseEntity.ok(cartDTO);
+        return ResponseEntity.ok(new ShoppingCartDTO(shoppingCartService.createNewCart(userId)));
     }
 
     /**
@@ -30,11 +26,18 @@ public class ShoppingCartController {
      * @param quantity  La quantité du produit à ajouter
      * @return Le panier mis à jour
      */
-    @PostMapping("/{cartId}/add")
-    public ResponseEntity<ShoppingCartDTO> addToCart(@PathVariable int cartId, @RequestParam int productId, @RequestParam int quantity) {
-        ShoppingCartDTO updatedCart = shoppingCartService.addProductToCart(cartId, productId, quantity);
+    @PostMapping("/add")
+    public ResponseEntity<ShoppingCartDTO> addToCart(
+            @RequestParam(required = false) Integer cartId, // CartId extrait de la query string
+            @RequestParam int productId,
+            @RequestParam int quantity,
+            @RequestParam(required = false) Integer userId) {
+        ShoppingCartDTO updatedCart = shoppingCartService.addProductToCart(cartId, productId, quantity, userId);
         return ResponseEntity.ok(updatedCart);
     }
+
+
+
 
     /**
      * Mettre à jour la quantité d'un produit dans le panier

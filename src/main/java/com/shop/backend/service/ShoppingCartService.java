@@ -12,9 +12,6 @@ import com.shop.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
-
 @Service
 public class ShoppingCartService {
 
@@ -30,14 +27,16 @@ public class ShoppingCartService {
     @Autowired
     private UserRepository userRepository;
 
+    public ShoppingCart getShoppingCartByIdOrCreate(int cartId, Integer userId) {
+        return shoppingCartRepository.findById(cartId).orElseGet(() -> {
+            System.out.println("Aucun panier trouvé avec l'ID : " + cartId + ". Création d'un nouveau panier.");
+            return createNewCart(userId);
+        });
+    }
+
     public ShoppingCart getShoppingCartById(int cartId) {
         return shoppingCartRepository.findById(cartId)
                 .orElseThrow(() -> new RuntimeException("Panier non trouvé avec l'ID: " + cartId));
-    }
-
-    private Product getProductById(int productId) {
-        return productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Produit non trouvé avec l'ID: " + productId));
     }
 
     private void reCalculateTotalPrice(ShoppingCart cart) {
@@ -64,38 +63,35 @@ public class ShoppingCartService {
         return line;
     }
 
-    private ShoppingCartDTO createCartForUser(int userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé avec l'ID : " + userId));
-        ShoppingCart cart = new ShoppingCart(user);
-        return new ShoppingCartDTO(shoppingCartRepository.save(cart));
-    }
-
-    public ShoppingCartDTO getOrCreateCartForUser(int userId) {
-        Optional<ShoppingCart> optionalCart = shoppingCartRepository.findByUserId(userId);
-        if (optionalCart.isPresent()) {
-            ShoppingCart cart = optionalCart.get();
-            return new ShoppingCartDTO(cart); // Convertir en DTO
+    public ShoppingCart createNewCart(Integer userId) {
+        ShoppingCart cart;
+        if (userId != null) {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé avec l'ID : " + userId));
+            cart = new ShoppingCart(user);
         } else {
-            return createCartForUser(userId); // Sinon, créer un panier
+            cart = new ShoppingCart(); // Panier pour visiteur
         }
+        return shoppingCartRepository.save(cart);
     }
 
-    // Création d'un panier pour un visiteur
-    public ShoppingCartDTO createCartForVisitor() {
-        ShoppingCart cart = new ShoppingCart();
-        shoppingCartRepository.save(cart);
-        return new ShoppingCartDTO(cart);
-    }
+    public ShoppingCartDTO addProductToCart(Integer cartId, int productId, int quantity, Integer userId) {
+        ShoppingCart cart;
+        // Vérifier si le cartId est fourni
+        if (cartId != 0 || cartId != null) {
+            cart = getShoppingCartByIdOrCreate(cartId, userId);
+        } else {
+            cart = createNewCart(userId);
+        }
 
-    public ShoppingCartDTO addProductToCart(int cartId, int productId, int quantity) {
-        ShoppingCart cart = getShoppingCartById(cartId);
-        Product product = getProductById(productId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Produit non trouvé avec l'ID: " + productId));
         findOrCreateCartLine(cart, product, quantity);
         reCalculateTotalPrice(cart);
         shoppingCartRepository.save(cart);
         return new ShoppingCartDTO(cart);
     }
+
 
     public ShoppingCartDTO updateProductQuantity(int cartId, int productId, int quantity) {
         ShoppingCart cart = getShoppingCartById(cartId);
