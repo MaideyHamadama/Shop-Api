@@ -1,10 +1,9 @@
 package com.shop.backend.entity;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.*;
+
+import java.util.Set;
+
 
 /**
  * Entity representing a Product in the database.
@@ -38,6 +37,14 @@ public class Product {
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
     private Category category;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "product_sizes",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "size_id")
+    )
+    private Set<Size> sizes;
 
     // ===========================
     //        Constructors
@@ -147,5 +154,20 @@ public class Product {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+    public Set<Size> getSizes() {
+        return sizes;
+    }
+
+    public void setSizes(Set<Size> sizes) {
+        this.sizes = sizes;
+    }
+
+    public void addSize(Size size) {
+        this.sizes.add(size);
+    }
+
+    public void removeSize(Size size) {
+        this.sizes.remove(size);
     }
 }

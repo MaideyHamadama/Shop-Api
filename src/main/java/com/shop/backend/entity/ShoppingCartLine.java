@@ -38,7 +38,6 @@ public class ShoppingCartLine {
         return totalPrice / (1 + tvaRate); // Calcul HT
     }
 
-
     // ===========================
     //      Constructors
     // ===========================

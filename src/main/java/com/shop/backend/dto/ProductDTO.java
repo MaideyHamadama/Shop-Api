@@ -1,6 +1,13 @@
 package com.shop.backend.dto;
 
+import com.shop.backend.entity.Category;
 import com.shop.backend.entity.Product;
+import com.shop.backend.entity.Size;
+import com.shop.backend.entity.SizeType;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ProductDTO {
 
@@ -11,6 +18,12 @@ public class ProductDTO {
     private int brandId;
     private String category;
     private String imageURL;
+
+    // Liste des tailles adultes
+    private List<String> adultSizes;
+
+    // Liste des tailles enfants
+    private List<String> childSizes;
 
 
     public ProductDTO() {
@@ -29,6 +42,25 @@ public class ProductDTO {
         this.brandId = product.getBrand().getIdBrand();
         this.category = product.getCategory().name();
         this.imageURL = product.getImage() != null ? product.getImage().getImageURL() : null;
+
+        // Charger les tailles adultes
+        this.adultSizes = product.getSizes().stream()
+                .filter(size -> SizeType.ADULT.equals(size.getType())) // Filtrer les tailles adultes
+                .map(size -> size.getAdultSize().name()) // Convertir l'énumération en chaîne
+                .filter(size -> size != null) // Éviter les tailles nulles
+                .collect(Collectors.toList());
+
+
+        this.childSizes = product.getSizes().stream()
+                .filter(size -> SizeType.CHILD.equals(size.getType())) // Filtrer les tailles enfants
+                .map(size -> {
+                    if (size.getChildSize() != null) {
+                        return String.valueOf(size.getChildSize().getValue()); // Récupérer uniquement la valeur numérique
+                    }
+                    return ""; // Si la taille est null, retourner une chaîne vide
+                })
+                .filter(size -> !size.isEmpty()) // Exclure les chaînes vides
+                .collect(Collectors.toList());
     }
 
     public int getIdProduct() {
@@ -85,5 +117,21 @@ public class ProductDTO {
 
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
+    }
+
+    public List<String> getAdultSizes() {
+        return adultSizes;
+    }
+
+    public void setAdultSizes(List<String> adultSizes) {
+        this.adultSizes = adultSizes;
+    }
+
+    public List<String> getChildSizes() {
+        return childSizes;
+    }
+
+    public void setChildSizes(List<String> childSizes) {
+        this.childSizes = childSizes;
     }
 }

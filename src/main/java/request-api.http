@@ -1,4 +1,3 @@
-### Récupérer la liste de tous les produits
 GET http://localhost:8090/products
 
 ### Récupérer la liste des catégories
@@ -6,6 +5,9 @@ GET http://localhost:8090/categories
 
 ### Récupérer les produits d'une catégorie (MEN)
 GET http://localhost:8090/categories/MEN/products
+
+### Récupérer les produits d'une catégorie (GIRL)
+GET http://localhost:8090/categories/GIRL/products
 
 ### Récupérer les produits d'une catégorie (BOY)
 GET http://localhost:8090/categories/BOY/products
@@ -62,4 +64,8 @@ DELETE http://localhost:8090/carts/1/products/2
 
 ### Récupérer un panier par son ID
 GET http://localhost:8090/carts/1
+
+###
+PUT http://localhost:8090/products/1/sizes/1
+
 

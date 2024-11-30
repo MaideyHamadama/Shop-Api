@@ -61,4 +61,16 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PutMapping("/{productId}/sizes/{sizeId}")
+    public ResponseEntity<ProductDTO> addSizeToProduct(@PathVariable int productId, @PathVariable int sizeId) {
+        Product updatedProduct = productService.addSizeToProduct(productId, sizeId);
+        return ResponseEntity.ok(new ProductDTO(updatedProduct));
+    }
+
+    @DeleteMapping("/{productId}/sizes/{sizeId}")
+    public ResponseEntity<ProductDTO> removeSizeFromProduct(@PathVariable int productId, @PathVariable int sizeId) {
+        Product updatedProduct = productService.removeSizeFromProduct(productId, sizeId);
+        return ResponseEntity.ok(new ProductDTO(updatedProduct));
+    }
 }

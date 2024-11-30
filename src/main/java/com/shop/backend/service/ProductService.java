@@ -2,7 +2,9 @@ package com.shop.backend.service;
 
 import com.shop.backend.dto.ProductDTO;
 import com.shop.backend.entity.Product;
+import com.shop.backend.entity.Size;
 import com.shop.backend.repository.ProductRepository;
+import com.shop.backend.repository.SizeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,9 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private SizeRepository sizeRepository;
 
     /**
      * Récupère tous les produits.
@@ -40,5 +45,27 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Produit non trouvé avec l'ID : " + id));
         return new ProductDTO(product);
+    }
+
+    public Product addSizeToProduct(int productId, int sizeId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Produit non trouvé avec l'ID : " + productId));
+        Size size = sizeRepository.findById(sizeId)
+                .orElseThrow(() -> new RuntimeException("Taille non trouvée avec l'ID : " + sizeId));
+
+        product.addSize(size);
+        productRepository.save(product);
+        return product;
+    }
+
+    public Product removeSizeFromProduct(int productId, int sizeId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Produit non trouvé avec l'ID : " + productId));
+        Size size = sizeRepository.findById(sizeId)
+                .orElseThrow(() -> new RuntimeException("Taille non trouvée avec l'ID : " + sizeId));
+
+        product.removeSize(size);
+        productRepository.save(product);
+        return product;
     }
 }
