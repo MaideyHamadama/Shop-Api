@@ -1,5 +1,6 @@
 package com.shop.backend.entity;
 
+<<<<<<< HEAD
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -16,6 +17,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+=======
+import jakarta.persistence.*;
+
+>>>>>>> bdc07a7e339098faf17963e85e29243a4ad9f7c9
 
 /**
  * Entity representing a Product in the database.
@@ -23,8 +28,6 @@ import jakarta.persistence.Table;
  * product ID, name, price, brand, category, and associated images and variants.
  */
 @Entity
-// Ligne a enlever une fois les DTO implémentés
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "Product")
 public class Product {
 
@@ -37,16 +40,15 @@ public class Product {
 
     @Column(name = "price", nullable = false)
     private double price;
+
     @Column(name = "description", nullable = false)
     private String description;
 
     @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference // Avoids an infinite loop during JSON serialization
     private ProductImage image;
 
     @ManyToOne
     @JoinColumn(name = "brand_id", nullable = false)
-    @JsonManagedReference // Avoids an infinite loop during JSON serialization
     private Brand brand;
 
     @Enumerated(EnumType.STRING)

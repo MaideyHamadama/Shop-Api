@@ -1,6 +1,5 @@
 package com.shop.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -23,7 +22,6 @@ public class Brand {
     private String brandName;
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference // Avoids an infinite loop during JSON serialization
     private List<Product> products = new ArrayList<>();
 
     // ===========================

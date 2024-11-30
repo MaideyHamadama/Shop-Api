@@ -1,7 +1,5 @@
 package com.shop.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 /**
@@ -14,24 +12,32 @@ public class ShoppingCartLine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "line_id")
-    private Long id;
+    private int id;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false) // Foreign key to ProductVariant
-    @JsonManagedReference // Gestion de la relation avec le produit pour JSON
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shopping_cart_id", nullable = false) // Foreign key to ShoppingCart
-    @JsonBackReference // Ceci empêche la sérialisation du lien vers le parent
     private ShoppingCart shoppingCart;
 
     @Column(name = "quantity", nullable = false)
     private int quantity;
-    
+
     @Column(name = "total_price", nullable = false)
     private double totalPrice;
-    
+
+    // ===========================
+    //           Methods
+    // ===========================
+
+    // Méthode pour calculer le prix HT (hors TVA)
+    public double getTotalPriceExcludingVAT() {
+        double tvaRate = shoppingCart.getTvaRate(); // Récupérer le taux du panier
+        return totalPrice / (1 + tvaRate); // Calcul HT
+    }
+
 
     // ===========================
     //      Constructors
@@ -39,21 +45,21 @@ public class ShoppingCartLine {
     public ShoppingCartLine() {
     }
 
-    public ShoppingCartLine(Product product, int quantity, ShoppingCart shoppingCart) {
+    public ShoppingCartLine(ShoppingCart cart, Product product, int quantity) {
         this.product = product;
+        this.shoppingCart = cart;
         this.quantity = quantity;
-        this.shoppingCart = shoppingCart;
         this.totalPrice = product.getPrice() * quantity;
     }
 
     // ===========================
     //      Getters & Setters
     // ===========================
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -88,6 +94,10 @@ public class ShoppingCartLine {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public double getTvaRate() {
+        return shoppingCart.getTvaRate();
     }
 
     @Override

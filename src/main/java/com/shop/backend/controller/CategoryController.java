@@ -1,5 +1,6 @@
 package com.shop.backend.controller;
 
+import com.shop.backend.dto.ProductDTO;
 import com.shop.backend.entity.Category;
 import com.shop.backend.entity.Product;
 import com.shop.backend.repository.ProductRepository;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -48,7 +51,7 @@ public class CategoryController {
      * This method allows the client to retrieve all products within a category for display purposes.
      */
     @GetMapping("/{categoryName}/products")
-    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable String categoryName) {
+    public ResponseEntity<List<ProductDTO>> getProductsByCategory(@PathVariable String categoryName) {
         Category category;
         try {
             category = Category.valueOf(categoryName.toUpperCase());
@@ -57,6 +60,17 @@ public class CategoryController {
         }
 
         List<Product> products = productRepository.findByCategory(category);
-        return ResponseEntity.ok().body(products);
+        if (products.isEmpty()) {
+            return ResponseEntity.ok().body(Collections.emptyList());
+        }
+
+        // Convertir les entités Product en DTO
+        List<ProductDTO> productDTOs = new ArrayList<>();
+        for (Product product : products) {
+            productDTOs.add(new ProductDTO(product));
+        }
+
+        return ResponseEntity.ok().body(productDTOs);
     }
+
 }

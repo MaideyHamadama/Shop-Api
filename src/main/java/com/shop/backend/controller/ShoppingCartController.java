@@ -1,60 +1,27 @@
 package com.shop.backend.controller;
 
+import com.shop.backend.dto.ProductCartRequest;
+import com.shop.backend.dto.ProductQuantityRequest;
+import com.shop.backend.dto.ShoppingCartDTO;
+import com.shop.backend.dto.UserCartRequest;
 import com.shop.backend.entity.ShoppingCart;
-import com.shop.backend.entity.ShoppingCartLine;
-import com.shop.backend.entity.Product;
-import com.shop.backend.entity.User;
-import com.shop.backend.repository.ShoppingCartLineRepository;
-import com.shop.backend.repository.ShoppingCartRepository;
-import com.shop.backend.repository.ProductRepository;
-import com.shop.backend.repository.UserRepository;
 import com.shop.backend.service.ShoppingCartService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/carts")
 public class ShoppingCartController {
 
+    @Autowired
+    private ShoppingCartService shoppingCartService;
 
-    private final ShoppingCartService shoppingCartService;
-
-    private final ShoppingCartRepository shoppingCartRepository;
-
-    private final ProductRepository productRepository;
-
-    private final ShoppingCartLineRepository shoppingCartLineRepository;
-
-    private final UserRepository userRepository;
-
-    public ShoppingCartController(ShoppingCartService shoppingCartService, ShoppingCartRepository shoppingCartRepository,
-                                  ShoppingCartLineRepository shoppingCartLineRepository,
-                                  ProductRepository productRepository, UserRepository userRepository) {
-        this.shoppingCartService = shoppingCartService;
-        this.shoppingCartRepository = shoppingCartRepository;
-        this.productRepository = productRepository;
-        this.shoppingCartLineRepository = shoppingCartLineRepository;
-        this.userRepository = userRepository;
-    }
-
-    @PostMapping("/new")
-    public ResponseEntity<ShoppingCart> newCart(@RequestParam(required = false) Integer userId) {
-        User user = null;
-
-        // Rechercher l'utilisateur si userId est fourni
-        if (userId != null) {
-            user = userRepository.findById(userId).orElse(null);
-            if (user == null) {
-                return ResponseEntity.badRequest().body(null); // Retourner une erreur si l'utilisateur n'existe pas
-            }
-        }
-
-        // Créer un panier via le service
-        ShoppingCart cart = shoppingCartService.createCart(user);
-
-        return ResponseEntity.ok(cart); // Retourner le panier créé
+    @PostMapping
+    public ResponseEntity<ShoppingCartDTO> newCart(@RequestBody(required = false) UserCartRequest userCartRequest) {
+        Integer userId = (userCartRequest != null) ? userCartRequest.getUserId() : null;
+        ShoppingCartDTO cartDTO = new ShoppingCartDTO(shoppingCartService.createNewCart(userId));
+        return ResponseEntity.ok(cartDTO);
     }
 
     /**
@@ -65,158 +32,69 @@ public class ShoppingCartController {
      * @param quantity  La quantité du produit à ajouter
      * @return Le panier mis à jour
      */
-    @PostMapping("/{cartId}/add")
-    public ResponseEntity<ShoppingCart> addToCart(@PathVariable int cartId, @RequestParam int productId, @RequestParam int quantity) {
-        // Récupérer le panier
-        Optional<ShoppingCart> shoppingCartOptional = shoppingCartRepository.findById(cartId);
-        if (!shoppingCartOptional.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        ShoppingCart cart = shoppingCartOptional.get();
-
-        // Récupérer le produit
-        Optional<Product> productOptional = productRepository.findById(productId);
-        if (!productOptional.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        Product product = productOptional.get();
-
-        // Vérifier si le produit existe déjà dans le panier
-        ShoppingCartLine existingLine = cart.getCartProducts().stream()
-                .filter(line -> line.getProduct().getIdProduct() == productId)
-                .findFirst()
-                .orElse(null);
-
-        if (existingLine != null) {
-            // Si le produit est déjà dans le panier, mettre à jour la quantité
-            existingLine.setQuantity(existingLine.getQuantity() + quantity);
-        } else {
-            // Sinon, ajouter un nouvel article dans le panier
-            ShoppingCartLine newLine = new ShoppingCartLine(product, quantity, cart);
-            newLine.setShoppingCart(cart); // Set the shopping cart for the new line
-            cart.getCartProducts().add(newLine); // Add the line to the cart
-        }
-
-        // Calculer le montant total du panier
-        double totalAmount = cart.getCartProducts().stream()
-                .mapToDouble(line -> line.getTotalPrice())
-                .sum();
-        cart.setCartTotalPrice(totalAmount);
-
-        // Sauvegarder les modifications dans la base de données
-        shoppingCartRepository.save(cart);
-
-        // Retourner le panier mis à jour
-        return ResponseEntity.ok(cart);
+    @PostMapping("/{cartId}/products")
+    public ResponseEntity<ShoppingCartDTO> addToCart(
+            @PathVariable(required = false) Integer cartId,
+            @RequestBody ProductCartRequest productCartRequest) {
+        ShoppingCartDTO updatedCart = shoppingCartService.addProductToCart(
+                cartId,
+                productCartRequest.getProductId(),
+                productCartRequest.getQuantity(),
+                productCartRequest.getUserId());
+        return ResponseEntity.ok(updatedCart);
     }
-    @PutMapping("/{cartId}/update")
-    public ResponseEntity<ShoppingCart> updateQuantity(@PathVariable int cartId, @RequestParam int productId, @RequestParam int quantity) {
-        // Récupérer le panier
-        ShoppingCart cart = shoppingCartRepository.findById(cartId)
-                .orElseThrow(() -> new RuntimeException("Panier non trouvé avec l'ID: " + cartId));
 
-        // Récupérer le produit
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Produit non trouvé avec l'ID: " + productId));
 
-        // Vérifier si le produit existe dans le panier
-        ShoppingCartLine existingLine = cart.getCartProducts().stream()
-                .filter(line -> line.getProduct().getIdProduct() == productId)
-                .findFirst()
-                .orElse(null);
-
-        if (existingLine == null) {
-            // Si le produit n'est pas dans le panier, renvoyer une erreur
-            return ResponseEntity.status(404).body(null); // Le produit n'est pas dans le panier
-        }
-
-        // Mettre à jour la quantité du produit
-        if (quantity > 0) {
-            existingLine.setQuantity(quantity);
-        } else {
-            // Si la quantité est 0 ou négative, on retire le produit du panier
-            cart.getCartProducts().remove(existingLine);
-        }
-
-        // Calculer le montant total du panier après mise à jour
-        double totalAmount = cart.getCartProducts().stream()
-                .mapToDouble(ShoppingCartLine::getTotalPrice)
-                .sum();
-        cart.setCartTotalPrice(totalAmount);
-
-        // Sauvegarder les modifications dans la base de données
-        shoppingCartRepository.save(cart);
-
-        // Retourner le panier mis à jour
-        return ResponseEntity.ok(cart);
+    /**
+     * Mettre à jour la quantité d'un produit dans le panier
+     *
+     * @param cartId    L'ID du panier
+     * @param productId L'ID du produit à mettre à jour
+     * @param quantity  La nouvelle quantité
+     * @return Le panier mis à jour
+     */
+    @PutMapping("/{cartId}/products/{productId}")
+    public ResponseEntity<ShoppingCartDTO> updateQuantity(
+            @PathVariable int cartId,
+            @PathVariable int productId,
+            @RequestBody ProductQuantityRequest productQuantityRequest) {
+        ShoppingCartDTO updatedCart = shoppingCartService.updateProductQuantity(
+                cartId,
+                productId,
+                productQuantityRequest.getQuantity());
+        return ResponseEntity.ok(updatedCart);
     }
 
     /**
      * Retirer un produit du panier
-     * @param cartId L'ID du panier
+     *
+     * @param cartId    L'ID du panier
      * @param productId L'ID du produit à retirer
      * @return Le panier mis à jour
      */
-    @DeleteMapping("/{cartId}/remove")
-    public ResponseEntity<ShoppingCart> removeFromCart(@PathVariable int cartId, @RequestParam int productId) {
-        // Récupérer le panier
-        ShoppingCart cart = shoppingCartRepository.findById(cartId)
-                .orElseThrow(() -> new RuntimeException("Panier non trouvé avec l'ID: " + cartId));
+    @DeleteMapping("/{cartId}/products/{productId}")
+    public ResponseEntity<ShoppingCartDTO> removeProductFromCart(@PathVariable int cartId, @PathVariable int productId) {
+        shoppingCartService.removeProductFromCart(cartId, productId);
+        ShoppingCart cart = shoppingCartService.getShoppingCartById(cartId);
 
-        // Récupérer le produit
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Produit non trouvé avec l'ID: " + productId));
-
-        // Vérifier si le produit existe dans le panier
-        ShoppingCartLine lineToRemove = cart.getCartProducts().stream()
-                .filter(line -> line.getProduct().getIdProduct() == productId)
-                .findFirst()
-                .orElse(null);
-
-        if (lineToRemove == null) {
-            // Si le produit n'est pas dans le panier, renvoyer une erreur
-            return ResponseEntity.status(404).body(null); // Le produit n'est pas dans le panier
+        if (cart.getCartProducts().isEmpty()) {
+            return ResponseEntity.noContent().build(); // Panier vide
         }
 
-        // Supprimer la ligne du panier
-        cart.getCartProducts().remove(lineToRemove);
-        shoppingCartLineRepository.delete(lineToRemove); // Supprime la ligne de la base de données
-
-        // Calculer le montant total du panier après suppression
-        double totalAmount = cart.getCartProducts().stream()
-                .mapToDouble(ShoppingCartLine::getTotalPrice)
-                .sum();
-        cart.setCartTotalPrice(totalAmount);
-
-        // Sauvegarder les modifications dans la base de données
-        shoppingCartRepository.save(cart);
-
-        // Retourner le panier mis à jour
-        return ResponseEntity.ok(cart);
-
+        ShoppingCartDTO updatedCart = new ShoppingCartDTO(cart);
+        return ResponseEntity.ok(updatedCart);
     }
+
+
     /**
-     * Récupérer le panier d'un utilisateur
+     * Récupérer un panier par son ID
+     *
      * @param cartId L'ID du panier
-     * @return Le panier avec ses lignes de produits
+     * @return Le panier sous forme de DTO
      */
     @GetMapping("/{cartId}")
-    public ResponseEntity<ShoppingCart> getCart(@PathVariable int cartId) {
-        // Récupérer le panier
-        ShoppingCart cart = shoppingCartRepository.findById(cartId)
-                .orElseThrow(() -> new RuntimeException("Panier non trouvé avec l'ID: " + cartId));
-        if (cart.getCartProducts().isEmpty()) {
-            return ResponseEntity.noContent().build(); // Retourner un statut 204 si le panier est vide
-        }
-
-        // Force le chargement des relations paresseuses
-        cart.getCartProducts().forEach(cartLine -> {
-            cartLine.getProduct().getIdProduct(); // Force le chargement du produit
-            if (cartLine.getProduct().getBrand() != null) {
-                cartLine.getProduct().getBrand().getBrandName(); // Force le chargement de la marque
-            }
-        });
-        // Retourner le panier avec ses lignes de produits et le prix total
-        return ResponseEntity.ok(cart);
+    public ResponseEntity<ShoppingCartDTO> getCart(@PathVariable int cartId) {
+        ShoppingCartDTO cartDTO = new ShoppingCartDTO(shoppingCartService.getShoppingCartById(cartId));
+        return ResponseEntity.ok(cartDTO);
     }
 }

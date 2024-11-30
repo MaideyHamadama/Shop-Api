@@ -1,6 +1,5 @@
 package com.shop.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 /**
@@ -25,7 +24,6 @@ public class ProductImage {
 
     @OneToOne
     @JoinColumn(name = "product_id", nullable = true)
-    @JsonBackReference // Avoids an infinite loop during JSON serialization
     private Product product;
 
     // ===========================

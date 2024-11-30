@@ -8,7 +8,7 @@ GET http://localhost:8090/categories
 
 ### GET request to list products by category (MEN)
 
-GET http://localhost:8090/categories/MEN/products
+GET http://localhost:8090/categories/M4EN/products
 
 ### GET request to list products by category (BOY)
 

@@ -1,6 +1,5 @@
 package com.shop.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +19,16 @@ public class ShoppingCart {
     private User user;
 
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference // Ceci évite la récursion infinie
     private List<ShoppingCartLine> cartProducts = new ArrayList<>();
 
+    @Column(name = "tva_rate", nullable = false)
+    private double tvaRate = 0.21; // Taux par défaut (21%)
+
     @Column(name = "cartTotalPrice")
-    private double cartTotalPrice;
+    private double cartTotalPrice; // Total TTC (avec TVA)
+
+    @Column(name = "cartTotalPriceExcludingVAT")
+    private double cartTotalPriceExcludingVAT; // Total HT (hors TVA)
     
 
     // ==========================
@@ -38,6 +42,7 @@ public class ShoppingCart {
     public ShoppingCart(User user) {
         this.user = user;
         this.cartTotalPrice = 0.0;
+        this.cartTotalPriceExcludingVAT = 0.0;
     }
 
     // ==========================
@@ -68,11 +73,27 @@ public class ShoppingCart {
         this.cartProducts = cartProducts;
     }
 
+    public double getTvaRate() {
+        return tvaRate;
+    }
+
+    public void setTvaRate(double tvaRate) {
+        this.tvaRate = tvaRate;
+    }
+
     public double getCartTotalPrice() {
         return cartTotalPrice;
     }
 
     public void setCartTotalPrice(double cartTotalPrice) {
         this.cartTotalPrice = cartTotalPrice;
+    }
+
+    public double getCartTotalPriceExcludingVAT() {
+        return cartTotalPriceExcludingVAT;
+    }
+
+    public void setCartTotalPriceExcludingVAT(double cartTotalPriceExcludingVAT) {
+        this.cartTotalPriceExcludingVAT = cartTotalPriceExcludingVAT;
     }
 }
