@@ -13,13 +13,4 @@ import java.util.Optional;
  */
 @Repository
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Integer> {
-
-    /**
-     * Rechercher un panier associé à un utilisateur par son ID.
-     *
-     * @param userId L'ID de l'utilisateur.
-     * @return Un {@link Optional} contenant le panier s'il existe.
-     */
-    @Query("SELECT cart FROM ShoppingCart cart WHERE cart.user.id = :userId")
-    Optional<ShoppingCart> findByUserId(@Param("userId") int userId);
 }
