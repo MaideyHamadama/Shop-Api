@@ -1,6 +1,7 @@
 package com.shop.backend.entity;
 
 import jakarta.persistence.*;
+
 import java.util.Set;
 
 /**
@@ -42,6 +43,16 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "size_id")
     )
+
+    /**
+     * Représente l'ensemble des tailles disponibles pour ce produit.
+     *
+     * - Utilise un `Set` pour garantir que chaque taille est unique et éviter les doublons.
+     * - Les tailles peuvent inclure des tailles pour adultes ou pour enfants,
+     *   différenciées par leur type (ADULT ou CHILD).
+     * - L'utilisation d'un `Set` est logique car l'ordre des tailles n'est pas
+     *   nécessairement important et les duplications doivent être évitées.
+     */
     private Set<Size> sizes;
 
     // ===========================
@@ -71,6 +82,15 @@ public class Product {
      * Constructeur par défaut pour JPA.
      */
     public Product() {
+    }
+
+    // ===========================
+    //        Méthodes
+    // ===========================
+
+    public void addImage(ProductImage image) {
+        this.image = image;
+        image.setProduct(this);
     }
 
     // ===========================
