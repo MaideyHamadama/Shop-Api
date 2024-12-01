@@ -2,6 +2,10 @@ package com.shop.backend.dto;
 
 import com.shop.backend.entity.ShoppingCartLine;
 
+/**
+ * Classe de transfert de données (DTO) pour représenter une ligne de panier d'achat.
+ * Permet de mapper les entités {@link ShoppingCartLine} pour les besoins des échanges de données.
+ */
 public class ShoppingCartLineDTO {
 
     private int id;
@@ -10,14 +14,20 @@ public class ShoppingCartLineDTO {
     private double totalPrice; // TTC
     private double totalPriceExcludingVAT; // HT
 
+    // ===========================
+    //        Constructeurs
+    // ===========================
 
+    /**
+     * Constructeur par défaut.
+     */
     public ShoppingCartLineDTO() {
     }
 
     /**
-     * Constructor that initializes the ShoppingCartLineDTO from a ShoppingCartLine entity.
+     * Constructeur qui initialise un {@link ShoppingCartLineDTO} à partir d'une entité {@link ShoppingCartLine}.
      *
-     * @param line The ShoppingCartLine entity to map.
+     * @param line L'entité {@link ShoppingCartLine} à mapper.
      */
     public ShoppingCartLineDTO(ShoppingCartLine line) {
         this.id = line.getId();
@@ -26,6 +36,10 @@ public class ShoppingCartLineDTO {
         this.totalPrice = line.getTotalPrice(); // TTC
         this.totalPriceExcludingVAT = line.getTotalPriceExcludingVAT(); // HT
     }
+
+    // ===========================
+    //    Getters et Setters
+    // ===========================
 
     public int getId() {
         return id;
@@ -67,4 +81,3 @@ public class ShoppingCartLineDTO {
         this.totalPriceExcludingVAT = totalPriceExcludingVAT;
     }
 }
-

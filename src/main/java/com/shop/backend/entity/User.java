@@ -3,9 +3,9 @@ package com.shop.backend.entity;
 import jakarta.persistence.*;
 
 /**
- * Entity representing a User in the database.
- * This class is mapped to the "User" table and includes attributes
- * for user details and their associated orders.
+ * Entité représentant un utilisateur dans la base de données.
+ * Cette classe est mappée à la table "User" et inclut des attributs pour
+ * les détails de l'utilisateur ainsi que son panier associé.
  */
 @Entity
 @Table(name = "User")
@@ -36,17 +36,26 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
     private ShoppingCart shoppingCart;
 
-
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<Order> orders = new ArrayList<>();
-
     // ===========================
-    //        Constructors
+    //        Constructeurs
     // ===========================
 
+    /**
+     * Constructeur par défaut.
+     */
     public User() {
     }
 
+    /**
+     * Constructeur complet pour créer une instance de User avec tous ses attributs.
+     *
+     * @param userName    Le prénom de l'utilisateur.
+     * @param userSurname Le nom de l'utilisateur.
+     * @param email       L'email de l'utilisateur.
+     * @param password    Le mot de passe de l'utilisateur.
+     * @param address     L'adresse de l'utilisateur.
+     * @param city        La ville de l'utilisateur.
+     */
     public User(String userName, String userSurname, String email, String password, String address, String city) {
         this.userName = userName;
         this.userSurname = userSurname;
@@ -57,7 +66,7 @@ public class User {
     }
 
     // ===========================
-    //        Getters & Setters
+    //    Getters et Setters
     // ===========================
 
     public int getUserID() {
@@ -115,10 +124,4 @@ public class User {
     public void setCity(String city) {
         this.city = city;
     }
-
-//
-//    public void addOrder(Order order) {
-//        this.orders.add(order);
-//        order.setUser(this);
-//    }
 }

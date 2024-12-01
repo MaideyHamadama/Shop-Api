@@ -8,19 +8,16 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Repository for managing {@link Product} entities.
+ * Repository pour gérer les entités {@link Product}.
  */
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     /**
-     * Retrieves all products belonging to a specific category.
+     * Récupère tous les produits appartenant à une catégorie spécifique.
      *
-     * @param category The category of products to retrieve.
-     * @return A list of {@link Product} instances that belong to the specified category.
-     *
-     * This method enables filtering products by category, returning only those associated
-     * with the specified category in the database.
+     * @param category La catégorie des produits à récupérer.
+     * @return Une liste d'instances de {@link Product} appartenant à la catégorie spécifiée.
      */
     List<Product> findByCategory(Category category);
 }

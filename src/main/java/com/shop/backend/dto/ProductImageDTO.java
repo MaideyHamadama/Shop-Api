@@ -2,6 +2,10 @@ package com.shop.backend.dto;
 
 import com.shop.backend.entity.ProductImage;
 
+/**
+ * Classe de transfert de données (DTO) pour représenter une image de produit.
+ * Permet de mapper les entités {@link ProductImage} pour les besoins des échanges de données.
+ */
 public class ProductImageDTO {
 
     private int idProdImage;
@@ -9,13 +13,20 @@ public class ProductImageDTO {
     private String color;
     private int productId;
 
+    // ===========================
+    //        Constructeurs
+    // ===========================
+
+    /**
+     * Constructeur par défaut.
+     */
     public ProductImageDTO() {
     }
 
     /**
-     * Constructor that initializes the ProductImageDTO from a ProductImage entity.
+     * Constructeur qui initialise un {@link ProductImageDTO} à partir d'une entité {@link ProductImage}.
      *
-     * @param productImage The ProductImage entity to map.
+     * @param productImage L'entité {@link ProductImage} à mapper.
      */
     public ProductImageDTO(ProductImage productImage) {
         this.idProdImage = productImage.getIdProdImage();
@@ -23,6 +34,10 @@ public class ProductImageDTO {
         this.color = productImage.getColor().name();
         this.productId = productImage.getProduct() != null ? productImage.getProduct().getIdProduct() : 0;
     }
+
+    // ===========================
+    //    Getters et Setters
+    // ===========================
 
     public int getIdProdImage() {
         return idProdImage;
@@ -56,4 +71,3 @@ public class ProductImageDTO {
         this.productId = productId;
     }
 }
-

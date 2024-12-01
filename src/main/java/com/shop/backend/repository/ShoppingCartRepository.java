@@ -8,11 +8,18 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-
+/**
+ * Repository pour gérer les entités {@link ShoppingCart}.
+ */
 @Repository
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Integer> {
-    // Rechercher un panier associé à un utilisateur par son ID
-    // TODO : Vérifier et adapter cette méthode une fois que le mappage entre User et ShoppingCart est validé
-    @Query("SELECT cartID FROM ShoppingCart WHERE user = ?1")
+
+    /**
+     * Rechercher un panier associé à un utilisateur par son ID.
+     *
+     * @param userId L'ID de l'utilisateur.
+     * @return Un {@link Optional} contenant le panier s'il existe.
+     */
+    @Query("SELECT cart FROM ShoppingCart cart WHERE cart.user.id = :userId")
     Optional<ShoppingCart> findByUserId(@Param("userId") int userId);
 }

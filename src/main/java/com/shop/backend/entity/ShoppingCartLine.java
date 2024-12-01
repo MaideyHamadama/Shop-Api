@@ -3,7 +3,7 @@ package com.shop.backend.entity;
 import jakarta.persistence.*;
 
 /**
- * Represents a line in the shopping cart, linking a product variant to a quantity and total price.
+ * Représente une ligne dans le panier d'achat, associant un produit à une quantité et un prix total.
  */
 @Entity
 @Table(name = "shopping_cart_line")
@@ -15,11 +15,11 @@ public class ShoppingCartLine {
     private int id;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false) // Foreign key to ProductVariant
+    @JoinColumn(name = "product_id", nullable = false) // Clé étrangère vers Product
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shopping_cart_id", nullable = false) // Foreign key to ShoppingCart
+    @JoinColumn(name = "shopping_cart_id", nullable = false) // Clé étrangère vers ShoppingCart
     private ShoppingCart shoppingCart;
 
     @Column(name = "quantity", nullable = false)
@@ -29,21 +29,47 @@ public class ShoppingCartLine {
     private double totalPrice;
 
     // ===========================
-    //           Methods
+    //         Méthodes
     // ===========================
 
-    // Méthode pour calculer le prix HT (hors TVA)
+    /**
+     * Calcule le prix hors TVA (HT) pour cette ligne.
+     *
+     * @return Le prix total hors TVA.
+     */
     public double getTotalPriceExcludingVAT() {
-        double tvaRate = shoppingCart.getTvaRate(); // Récupérer le taux du panier
+        double tvaRate = shoppingCart.getTvaRate(); // Récupère le taux de TVA du panier
         return totalPrice / (1 + tvaRate); // Calcul HT
     }
 
+    @Override
+    public String toString() {
+        return "ShoppingCartLine{" +
+                "id=" + id +
+                ", product=" + product +
+                ", shoppingCart=" + shoppingCart +
+                ", quantity=" + quantity +
+                ", totalPrice=" + totalPrice +
+                '}';
+    }
+
     // ===========================
-    //      Constructors
+    //       Constructeurs
     // ===========================
+
+    /**
+     * Constructeur par défaut.
+     */
     public ShoppingCartLine() {
     }
 
+    /**
+     * Constructeur pour initialiser une ligne de panier avec ses attributs.
+     *
+     * @param cart     Le panier associé.
+     * @param product  Le produit de la ligne.
+     * @param quantity La quantité du produit.
+     */
     public ShoppingCartLine(ShoppingCart cart, Product product, int quantity) {
         this.product = product;
         this.shoppingCart = cart;
@@ -52,8 +78,9 @@ public class ShoppingCartLine {
     }
 
     // ===========================
-    //      Getters & Setters
+    //     Getters et Setters
     // ===========================
+
     public int getId() {
         return id;
     }
@@ -76,7 +103,7 @@ public class ShoppingCartLine {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-        this.totalPrice = product.getPrice() * quantity;
+        this.totalPrice = product.getPrice() * quantity; // Recalculer le total
     }
 
     public Product getProduct() {
@@ -98,15 +125,5 @@ public class ShoppingCartLine {
     public double getTvaRate() {
         return shoppingCart.getTvaRate();
     }
-
-    @Override
-    public String toString() {
-        return "ShoppingCartLine{" +
-                "id=" + id +
-                ", product=" + product +
-                ", shoppingCart=" + shoppingCart +
-                ", quantity=" + quantity +
-                ", totalPrice=" + totalPrice +
-                '}';
-    }
 }
+

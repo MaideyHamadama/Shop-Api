@@ -4,6 +4,11 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entité représentant un panier d'achat dans la base de données.
+ * Cette classe est mappée à la table "ShoppingCart" et inclut des attributs pour
+ * l'utilisateur associé, les produits dans le panier, les totaux avec ou sans TVA, et le taux de TVA.
+ */
 @Entity
 @Table(name = "ShoppingCart")
 public class ShoppingCart {
@@ -13,7 +18,6 @@ public class ShoppingCart {
     @Column(name = "cartID")
     private int cartID;
 
-    // UserId peut etre null si l'utilisateur est un visiteur
     @OneToOne
     @JoinColumn(name = "userID", nullable = true)
     private User user;
@@ -22,23 +26,30 @@ public class ShoppingCart {
     private List<ShoppingCartLine> cartProducts = new ArrayList<>();
 
     @Column(name = "tva_rate", nullable = false)
-    private double tvaRate = 0.21; // Taux par défaut (21%)
+    private double tvaRate = 0.21;
 
     @Column(name = "cartTotalPrice")
-    private double cartTotalPrice; // Total TTC (avec TVA)
+    private double cartTotalPrice;
 
     @Column(name = "cartTotalPriceExcludingVAT")
-    private double cartTotalPriceExcludingVAT; // Total HT (hors TVA)
-    
+    private double cartTotalPriceExcludingVAT;
 
     // ==========================
-    //      Constructors
+    //      Constructeurs
     // ==========================
 
+    /**
+     * Constructeur par défaut pour initialiser un panier vide.
+     */
     public ShoppingCart() {
         this.cartTotalPrice = 0.0;
     }
 
+    /**
+     * Constructeur pour initialiser un panier associé à un utilisateur.
+     *
+     * @param user L'utilisateur associé au panier.
+     */
     public ShoppingCart(User user) {
         this.user = user;
         this.cartTotalPrice = 0.0;
@@ -46,7 +57,7 @@ public class ShoppingCart {
     }
 
     // ==========================
-    //      Getters & Setters
+    //    Getters et Setters
     // ==========================
 
     public int getCartID() {

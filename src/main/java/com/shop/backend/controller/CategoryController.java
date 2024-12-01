@@ -13,8 +13,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Controller for managing {@link Category} entities.
- * Provides endpoints to retrieve and interact with product categories.
+ * Contrôleur pour gérer les entités {@link Category}.
+ * Fournit des endpoints pour récupérer et interagir avec les catégories de produits.
  */
 @RestController
 @RequestMapping("/categories")
@@ -24,13 +24,13 @@ public class CategoryController {
     private ProductRepository productRepository;
 
     /**
-     * Retrieves all available categories.
+     * Récupère toutes les catégories disponibles.
      *
-     * @return A {@link ResponseEntity} containing an array of all values in the {@link Category} enumeration.
-     *         If the retrieval is successful, it returns an HTTP 200 (OK) status
-     *         with the categories in the response body.
+     * @return Un {@link ResponseEntity} contenant un tableau de toutes les valeurs de l'énumération {@link Category}.
+     *         Si la récupération est réussie, elle retourne un statut HTTP 200 (OK)
+     *         avec les catégories dans le corps de la réponse.
      *
-     * This method allows the client to retrieve all categories for display purposes.
+     * Cette méthode permet au client de récupérer toutes les catégories pour des fins d'affichage.
      */
     @GetMapping
     public ResponseEntity<Category[]> getAllCategories() {
@@ -38,17 +38,18 @@ public class CategoryController {
     }
 
     /**
-     * Retrieves the list of all products in a specific category.
+     * Récupère la liste de tous les produits d'une catégorie spécifique.
      *
-     * @param categoryName The name of the category containing the products to retrieve.
-     * @return A {@link ResponseEntity} containing a list of all {@link Product} objects in the specified category.
+     * @param categoryName Le nom de la catégorie contenant les produits à récupérer.
+     * @return Un {@link ResponseEntity} contenant une liste de tous les objets {@link ProductDTO}
+     *         dans la catégorie spécifiée.
      *
-     *         If the retrieval is successful, it returns an HTTP 200 (OK) status
-     *         with the products in the response body.
-     *         If the category does not exist, it returns an HTTP 400 (Bad Request) status.
-     *         If no products are found, it returns an HTTP 204 (No Content) status.
+     *         Si la récupération est réussie, elle retourne un statut HTTP 200 (OK)
+     *         avec les produits dans le corps de la réponse.
+     *         Si la catégorie n'existe pas, elle retourne un statut HTTP 400 (Bad Request).
+     *         Si aucun produit n'est trouvé, elle retourne un statut HTTP 204 (No Content).
      *
-     * This method allows the client to retrieve all products within a category for display purposes.
+     * Cette méthode permet au client de récupérer tous les produits dans une catégorie pour des fins d'affichage.
      */
     @GetMapping("/{categoryName}/products")
     public ResponseEntity<List<ProductDTO>> getProductsByCategory(@PathVariable String categoryName) {
@@ -72,5 +73,4 @@ public class CategoryController {
 
         return ResponseEntity.ok().body(productDTOs);
     }
-
 }

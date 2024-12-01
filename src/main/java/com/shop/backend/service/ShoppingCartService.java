@@ -12,6 +12,9 @@ import com.shop.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service pour gérer les opérations liées aux paniers d'achat.
+ */
 @Service
 public class ShoppingCartService {
 
@@ -27,9 +30,12 @@ public class ShoppingCartService {
     @Autowired
     private UserRepository userRepository;
 
+    // ===========================
+    //        Méthodes
+    // ===========================
+
     public ShoppingCart getShoppingCartByIdOrCreate(int cartId, Integer userId) {
         return shoppingCartRepository.findById(cartId).orElseGet(() -> {
-            System.out.println("Aucun panier trouvé avec l'ID : " + cartId + ". Création d'un nouveau panier.");
             return createNewCart(userId);
         });
     }
@@ -48,10 +54,9 @@ public class ShoppingCartService {
                 .mapToDouble(ShoppingCartLine::getTotalPriceExcludingVAT) // Total HT
                 .sum();
 
-        cart.setCartTotalPrice(totalWithVAT); // Enregistrer le total TTC
-        cart.setCartTotalPriceExcludingVAT(totalExcludingVAT); // Enregistrer le total HT
+        cart.setCartTotalPrice(totalWithVAT);
+        cart.setCartTotalPriceExcludingVAT(totalExcludingVAT);
     }
-
 
     private ShoppingCartLine findProductInCart(ShoppingCart cart, int productId) {
         return cart.getCartProducts().stream()
@@ -62,23 +67,19 @@ public class ShoppingCartService {
 
     private ShoppingCartLine findOrCreateCartLine(ShoppingCart cart, Product product, int quantity) {
         ShoppingCartLine line = findProductInCart(cart, product.getIdProduct());
-        double productPrice = product.getPrice(); // Prix unitaire du produit TTC (avec TVA)
-        double tvaRate = cart.getTvaRate(); // Récupérer le taux de TVA du panier
-
+        double productPrice = product.getPrice();
         if (line == null) {
-            double totalPrice = productPrice * quantity; // Prix TTC pour la quantité
+            double totalPrice = productPrice * quantity;
             line = new ShoppingCartLine(cart, product, quantity);
             line.setTotalPrice(totalPrice);
             cart.getCartProducts().add(line);
         } else {
             line.setQuantity(line.getQuantity() + quantity);
-            double totalPrice = productPrice * line.getQuantity(); // Recalculer le prix TTC
+            double totalPrice = productPrice * line.getQuantity();
             line.setTotalPrice(totalPrice);
         }
-
         return line;
     }
-
 
     public ShoppingCart createNewCart(Integer userId) {
         ShoppingCart cart;
@@ -87,19 +88,15 @@ public class ShoppingCartService {
                     .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé avec l'ID : " + userId));
             cart = new ShoppingCart(user);
         } else {
-            cart = new ShoppingCart(); // Panier pour visiteur
+            cart = new ShoppingCart();
         }
         return shoppingCartRepository.save(cart);
     }
 
     public ShoppingCartDTO addProductToCart(Integer cartId, int productId, int quantity, Integer userId) {
-        ShoppingCart cart;
-        // Vérifier si le cartId est fourni
-        if (cartId != 0 || cartId != null) {
-            cart = getShoppingCartByIdOrCreate(cartId, userId);
-        } else {
-            cart = createNewCart(userId);
-        }
+        ShoppingCart cart = (cartId != null && cartId != 0) ?
+                getShoppingCartByIdOrCreate(cartId, userId) :
+                createNewCart(userId);
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Produit non trouvé avec l'ID: " + productId));
@@ -108,7 +105,6 @@ public class ShoppingCartService {
         shoppingCartRepository.save(cart);
         return new ShoppingCartDTO(cart);
     }
-
 
     public ShoppingCartDTO updateProductQuantity(int cartId, int productId, int quantity) {
         ShoppingCart cart = getShoppingCartById(cartId);

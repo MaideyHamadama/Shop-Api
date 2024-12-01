@@ -3,9 +3,9 @@ package com.shop.backend.entity;
 import jakarta.persistence.*;
 
 /**
- * Entity representing an image associated with a {@link Product}.
- * This class is mapped to the "ProductImage" table and includes attributes for
- * image ID, image URL, color, and the associated product.
+ * Entité représentant une image associée à un produit.
+ * Cette classe est mappée à la table "ProductImage" et inclut des attributs pour
+ * l'ID de l'image, l'URL de l'image, la couleur et le produit associé.
  */
 @Entity
 @Table(name = "ProductImage")
@@ -27,15 +27,15 @@ public class ProductImage {
     private Product product;
 
     // ===========================
-    //        Constructors
+    //        Constructeurs
     // ===========================
 
     /**
-     * Full constructor to create a ProductImage instance with all attributes.
+     * Constructeur complet pour créer une instance de ProductImage avec tous ses attributs.
      *
-     * @param idProdImage The unique identifier for the product image.
-     * @param imageURL    The URL of the image.
-     * @param color       The {@link Color} associated with the image.
+     * @param idProdImage L'identifiant unique de l'image.
+     * @param imageURL    L'URL de l'image.
+     * @param color       La couleur associée à l'image.
      */
     public ProductImage(int idProdImage, String imageURL, Color color) {
         this.idProdImage = idProdImage;
@@ -44,13 +44,13 @@ public class ProductImage {
     }
 
     /**
-     * Default constructor for JPA.
+     * Constructeur par défaut pour JPA.
      */
     public ProductImage() {
     }
 
     // ===========================
-    //        Getters & Setters
+    //    Getters et Setters
     // ===========================
 
     public int getIdProdImage() {

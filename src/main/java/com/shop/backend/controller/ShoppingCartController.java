@@ -10,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Contrôleur pour gérer les opérations relatives aux paniers d'achat.
+ * Fournit des endpoints pour créer, récupérer, mettre à jour et supprimer des éléments des paniers.
+ */
 @RestController
 @RequestMapping("/carts")
 public class ShoppingCartController {
@@ -17,6 +21,15 @@ public class ShoppingCartController {
     @Autowired
     private ShoppingCartService shoppingCartService;
 
+    /**
+     * Crée un nouveau panier d'achat pour un utilisateur.
+     *
+     * @param userCartRequest Les informations de l'utilisateur (facultatif).
+     * @return Un {@link ResponseEntity} contenant le DTO du panier créé.
+     *
+     * Cette méthode permet de créer un panier vide pour un utilisateur identifié
+     * ou un utilisateur anonyme si aucune information n'est fournie.
+     */
     @PostMapping
     public ResponseEntity<ShoppingCartDTO> newCart(@RequestBody(required = false) UserCartRequest userCartRequest) {
         Integer userId = (userCartRequest != null) ? userCartRequest.getUserId() : null;
@@ -25,12 +38,11 @@ public class ShoppingCartController {
     }
 
     /**
-     * Ajouter un produit au panier
+     * Ajoute un produit dans un panier existant.
      *
-     * @param cartId    L'ID du panier
-     * @param productId L'ID du produit à ajouter
-     * @param quantity  La quantité du produit à ajouter
-     * @return Le panier mis à jour
+     * @param cartId            L'ID du panier.
+     * @param productCartRequest Les détails du produit et de la quantité à ajouter.
+     * @return Un {@link ResponseEntity} contenant le panier mis à jour sous forme de DTO.
      */
     @PostMapping("/{cartId}/products")
     public ResponseEntity<ShoppingCartDTO> addToCart(
@@ -44,14 +56,13 @@ public class ShoppingCartController {
         return ResponseEntity.ok(updatedCart);
     }
 
-
     /**
-     * Mettre à jour la quantité d'un produit dans le panier
+     * Met à jour la quantité d'un produit dans le panier.
      *
-     * @param cartId    L'ID du panier
-     * @param productId L'ID du produit à mettre à jour
-     * @param quantity  La nouvelle quantité
-     * @return Le panier mis à jour
+     * @param cartId              L'ID du panier.
+     * @param productId           L'ID du produit à mettre à jour.
+     * @param productQuantityRequest La nouvelle quantité du produit.
+     * @return Un {@link ResponseEntity} contenant le panier mis à jour sous forme de DTO.
      */
     @PutMapping("/{cartId}/products/{productId}")
     public ResponseEntity<ShoppingCartDTO> updateQuantity(
@@ -66,11 +77,12 @@ public class ShoppingCartController {
     }
 
     /**
-     * Retirer un produit du panier
+     * Supprime un produit d'un panier existant.
      *
-     * @param cartId    L'ID du panier
-     * @param productId L'ID du produit à retirer
-     * @return Le panier mis à jour
+     * @param cartId    L'ID du panier.
+     * @param productId L'ID du produit à retirer.
+     * @return Un {@link ResponseEntity} contenant le panier mis à jour sous forme de DTO,
+     * ou un statut HTTP 204 (No Content) si le panier est vide après la suppression.
      */
     @DeleteMapping("/{cartId}/products/{productId}")
     public ResponseEntity<ShoppingCartDTO> removeProductFromCart(@PathVariable int cartId, @PathVariable int productId) {
@@ -85,12 +97,11 @@ public class ShoppingCartController {
         return ResponseEntity.ok(updatedCart);
     }
 
-
     /**
-     * Récupérer un panier par son ID
+     * Récupère un panier d'achat par son ID.
      *
-     * @param cartId L'ID du panier
-     * @return Le panier sous forme de DTO
+     * @param cartId L'ID du panier à récupérer.
+     * @return Un {@link ResponseEntity} contenant le panier sous forme de DTO.
      */
     @GetMapping("/{cartId}")
     public ResponseEntity<ShoppingCartDTO> getCart(@PathVariable int cartId) {

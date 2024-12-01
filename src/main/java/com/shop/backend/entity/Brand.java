@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Entity representing a Brand in the database.
- * This class is mapped to the "Brand" table and includes attributes for
- * brand ID, brand name, and a list of products associated with the brand.
+ * Entité représentant une marque dans la base de données.
+ * Cette classe est mappée à la table "Brand" et inclut des attributs pour
+ * l'ID de la marque, son nom, et une liste de produits associés.
  */
 @Entity
 @Table(name = "Brand")
@@ -25,14 +25,14 @@ public class Brand {
     private List<Product> products = new ArrayList<>();
 
     // ===========================
-    //        Constructors
+    //        Constructeurs
     // ===========================
 
     /**
-     * Full constructor to create a Brand instance with all attributes.
+     * Constructeur complet pour créer une instance de Brand avec tous ses attributs.
      *
-     * @param idBrand   The unique identifier for the brand.
-     * @param brandName The name of the brand.
+     * @param idBrand   L'identifiant unique de la marque.
+     * @param brandName Le nom de la marque.
      */
     public Brand(int idBrand, String brandName) {
         this.idBrand = idBrand;
@@ -40,13 +40,13 @@ public class Brand {
     }
 
     /**
-     * Default constructor for JPA.
+     * Constructeur par défaut pour JPA.
      */
     public Brand() {
     }
 
     // ===========================
-    //        Getters & Setters
+    //    Getters et Setters
     // ===========================
 
     public int getIdBrand() {

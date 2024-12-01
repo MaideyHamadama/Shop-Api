@@ -1,5 +1,8 @@
 package com.shop.backend.entity;
 
+/**
+ * Enumération représentant les tailles adultes disponibles.
+ */
 public enum AdultSize {
     XXS,
     XS,

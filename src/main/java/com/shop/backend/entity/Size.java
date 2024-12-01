@@ -2,6 +2,11 @@ package com.shop.backend.entity;
 
 import jakarta.persistence.*;
 
+/**
+ * Entité représentant une taille dans la base de données.
+ * Cette classe est mappée à la table "sizes" et inclut les attributs pour
+ * le type de taille, les tailles adultes et enfants.
+ */
 @Entity
 @Table(name = "sizes")
 public class Size {
@@ -22,14 +27,32 @@ public class Size {
     @Column(name = "child_size")
     private ChildSize childSize;
 
+    // ===========================
+    //        Constructeurs
+    // ===========================
+
+    /**
+     * Constructeur par défaut pour JPA.
+     */
     public Size() {
     }
 
+    /**
+     * Constructeur complet pour initialiser une taille avec ses attributs.
+     *
+     * @param type       Le type de la taille (ADULT ou CHILD).
+     * @param adultSize  La taille adulte associée (facultatif).
+     * @param childSize  La taille enfant associée (facultatif).
+     */
     public Size(SizeType type, AdultSize adultSize, ChildSize childSize) {
         this.type = type;
         this.adultSize = adultSize;
         this.childSize = childSize;
     }
+
+    // ===========================
+    //    Getters et Setters
+    // ===========================
 
     public Integer getId() {
         return id;

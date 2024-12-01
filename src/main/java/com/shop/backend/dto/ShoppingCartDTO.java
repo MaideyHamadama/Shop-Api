@@ -1,12 +1,14 @@
 package com.shop.backend.dto;
 
 import com.shop.backend.entity.ShoppingCart;
-import com.shop.backend.entity.ShoppingCartLine;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Classe de transfert de données (DTO) pour représenter un panier d'achat.
+ * Permet de mapper les entités {@link ShoppingCart} pour les besoins des échanges de données.
+ */
 public class ShoppingCartDTO {
 
     private int cartID;
@@ -16,13 +18,20 @@ public class ShoppingCartDTO {
     private double cartTotalPriceExcludingVAT;
     private double tvaRate;
 
+    // ===========================
+    //        Constructeurs
+    // ===========================
+
+    /**
+     * Constructeur par défaut.
+     */
     public ShoppingCartDTO() {
     }
 
     /**
-     * Constructor that initializes the ShoppingCartDTO from a ShoppingCart entity.
+     * Constructeur qui initialise un {@link ShoppingCartDTO} à partir d'une entité {@link ShoppingCart}.
      *
-     * @param cart The ShoppingCart entity to map.
+     * @param cart L'entité {@link ShoppingCart} à mapper.
      */
     public ShoppingCartDTO(ShoppingCart cart) {
         this.cartID = cart.getCartID();
@@ -33,6 +42,10 @@ public class ShoppingCartDTO {
                 .collect(Collectors.toList());
         this.tvaRate = cart.getTvaRate();
     }
+
+    // ===========================
+    //    Getters et Setters
+    // ===========================
 
     public int getCartID() {
         return cartID;
@@ -78,4 +91,3 @@ public class ShoppingCartDTO {
         return tvaRate;
     }
 }
-

@@ -1,14 +1,12 @@
 package com.shop.backend.entity;
 
 import jakarta.persistence.*;
-
 import java.util.Set;
 
-
 /**
- * Entity representing a Product in the database.
- * This class is mapped to the "Product" table and includes attributes for
- * product ID, name, price, brand, category, and associated images and variants.
+ * Entité représentant un produit dans la base de données.
+ * Cette classe est mappée à la table "Product" et inclut les attributs pour
+ * l'ID, le nom, le prix, la marque, la catégorie, ainsi que les tailles et images associées.
  */
 @Entity
 @Table(name = "Product")
@@ -47,58 +45,37 @@ public class Product {
     private Set<Size> sizes;
 
     // ===========================
-    //        Constructors
+    //        Constructeurs
     // ===========================
 
     /**
-     * Full constructor to create a Product instance with all attributes.
+     * Constructeur complet pour créer une instance de produit avec tous ses attributs.
      *
-     * @param idProduct   The unique identifier for the product.
-     * @param productName The name of the product.
-     * @param price       The price of the product.
-     * @param brand       The {@link Brand} associated with this product.
-     * @param category    The {@link Category} of the product.
-     * @param description The description of the product.
+     * @param idProduct   L'identifiant unique du produit.
+     * @param productName Le nom du produit.
+     * @param price       Le prix du produit.
+     * @param description La description du produit.
+     * @param brand       La marque associée au produit.
+     * @param category    La catégorie du produit.
      */
-    public Product(int idProduct, String productName, double price, String description ,Brand brand, Category category) {
+    public Product(int idProduct, String productName, double price, String description, Brand brand, Category category) {
         this.idProduct = idProduct;
         this.productName = productName;
         this.price = price;
+        this.description = description;
         this.brand = brand;
         this.category = category;
-        this.description = description;
     }
 
     /**
-     * Default constructor for JPA.
+     * Constructeur par défaut pour JPA.
      */
     public Product() {
     }
 
     // ===========================
-    //          Methods
+    //    Getters et Setters
     // ===========================
-
-    //TODO Deplacer dans service
-
-    /**
-     * Adds the image for the product and sets the product reference in the image.
-     *
-     * @param image The {@link ProductImage} to add.
-     */
-    public void addImage(ProductImage image) {
-        this.image = image;
-        image.setProduct(this);
-    }
-
-
-    // ===========================
-    //        Getters & Setters
-    // ===========================
-
-    public String getImageURL() {
-        return image.getImageURL();
-    }
 
     public int getIdProduct() {
         return idProduct;
@@ -155,6 +132,7 @@ public class Product {
     public void setCategory(Category category) {
         this.category = category;
     }
+
     public Set<Size> getSizes() {
         return sizes;
     }

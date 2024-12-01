@@ -1,14 +1,15 @@
 package com.shop.backend.dto;
 
-import com.shop.backend.entity.Category;
 import com.shop.backend.entity.Product;
-import com.shop.backend.entity.Size;
 import com.shop.backend.entity.SizeType;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Classe de transfert de données (DTO) pour représenter un produit.
+ * Permet de mapper les entités {@link Product} pour les besoins des échanges de données.
+ */
 public class ProductDTO {
 
     private int idProduct;
@@ -18,21 +19,23 @@ public class ProductDTO {
     private int brandId;
     private String category;
     private String imageURL;
-
-    // Liste des tailles adultes
     private List<String> adultSizes;
-
-    // Liste des tailles enfants
     private List<String> childSizes;
 
+    // ===========================
+    //        Constructeurs
+    // ===========================
 
+    /**
+     * Constructeur par défaut.
+     */
     public ProductDTO() {
     }
 
     /**
-     * Constructor that initializes the com.shop.backend.dto.ProductDTO from a Product entity.
+     * Constructeur qui initialise un {@link ProductDTO} à partir d'une entité {@link Product}.
      *
-     * @param product The Product entity to map.
+     * @param product L'entité {@link Product} à mapper.
      */
     public ProductDTO(Product product) {
         this.idProduct = product.getIdProduct();
@@ -42,20 +45,20 @@ public class ProductDTO {
         this.brandId = product.getBrand().getIdBrand();
         this.category = product.getCategory().name();
         this.imageURL = product.getImage() != null ? product.getImage().getImageURL() : null;
-
-        // Charger les tailles adultes
         this.adultSizes = product.getSizes().stream()
-                .filter(size -> SizeType.ADULT.equals(size.getType())) // Filtrer les tailles adultes
-                .map(size -> size.getAdultSize().name()) // Convertir l'énumération en chaîne
+                .filter(size -> SizeType.ADULT.equals(size.getType()))
+                .map(size -> size.getAdultSize().name())
                 .collect(Collectors.toList());
-
-        // Charger les tailles enfants et extraire uniquement le chiffre
         this.childSizes = product.getSizes().stream()
-                .filter(size -> SizeType.CHILD.equals(size.getType())) // Filtrer les tailles enfants
-                .map(size -> size.getChildSize() != null ? size.getChildSize().getNumericValue() : null) // Utiliser la méthode dédiée
-                .filter(size -> size != null) // Éviter les tailles nulles
+                .filter(size -> SizeType.CHILD.equals(size.getType()))
+                .map(size -> size.getChildSize() != null ? size.getChildSize().getNumericValue() : null)
+                .filter(size -> size != null)
                 .collect(Collectors.toList());
     }
+
+    // ===========================
+    //    Getters et Setters
+    // ===========================
 
     public int getIdProduct() {
         return idProduct;

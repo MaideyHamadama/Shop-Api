@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service pour gérer les opérations liées aux produits.
+ */
 @Service
 public class ProductService {
 
@@ -20,8 +23,12 @@ public class ProductService {
     @Autowired
     private SizeRepository sizeRepository;
 
+    // ===========================
+    //        Méthodes
+    // ===========================
+
     /**
-     * Récupère tous les produits.
+     * Récupère tous les produits disponibles.
      *
      * @return Une liste de {@link ProductDTO} représentant tous les produits.
      */
@@ -47,6 +54,13 @@ public class ProductService {
         return new ProductDTO(product);
     }
 
+    /**
+     * Ajoute une taille à un produit existant.
+     *
+     * @param productId L'ID du produit.
+     * @param sizeId    L'ID de la taille à ajouter.
+     * @return Le produit mis à jour.
+     */
     public Product addSizeToProduct(int productId, int sizeId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Produit non trouvé avec l'ID : " + productId));
@@ -58,6 +72,13 @@ public class ProductService {
         return product;
     }
 
+    /**
+     * Supprime une taille d'un produit existant.
+     *
+     * @param productId L'ID du produit.
+     * @param sizeId    L'ID de la taille à supprimer.
+     * @return Le produit mis à jour.
+     */
     public Product removeSizeFromProduct(int productId, int sizeId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Produit non trouvé avec l'ID : " + productId));
