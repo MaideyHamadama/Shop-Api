@@ -47,19 +47,13 @@ public class ProductDTO {
         this.adultSizes = product.getSizes().stream()
                 .filter(size -> SizeType.ADULT.equals(size.getType())) // Filtrer les tailles adultes
                 .map(size -> size.getAdultSize().name()) // Convertir l'énumération en chaîne
-                .filter(size -> size != null) // Éviter les tailles nulles
                 .collect(Collectors.toList());
 
-
+        // Charger les tailles enfants et extraire uniquement le chiffre
         this.childSizes = product.getSizes().stream()
                 .filter(size -> SizeType.CHILD.equals(size.getType())) // Filtrer les tailles enfants
-                .map(size -> {
-                    if (size.getChildSize() != null) {
-                        return String.valueOf(size.getChildSize().getValue()); // Récupérer uniquement la valeur numérique
-                    }
-                    return ""; // Si la taille est null, retourner une chaîne vide
-                })
-                .filter(size -> !size.isEmpty()) // Exclure les chaînes vides
+                .map(size -> size.getChildSize() != null ? size.getChildSize().getNumericValue() : null) // Utiliser la méthode dédiée
+                .filter(size -> size != null) // Éviter les tailles nulles
                 .collect(Collectors.toList());
     }
 

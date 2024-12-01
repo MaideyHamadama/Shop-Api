@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Controller for managing {@link Product} entities.
- * Provides endpoints to retrieve and interact with products.
+ * Contrôleur pour gérer les entités {@link Product}.
+ * Fournit des endpoints pour récupérer et interagir avec les produits.
  */
 @RestController
 @RequestMapping("/products")
@@ -21,15 +21,16 @@ public class ProductController {
     private ProductService productService;
 
     /**
-     * Retrieves the list of all products from the database.
+     * Récupère la liste de tous les produits depuis la base de données.
      *
-     * @return A {@link ResponseEntity} containing a list of all {@link Product} instances.
+     * @return Un {@link ResponseEntity} contenant une liste de toutes les instances de {@link Product}.
      *
-     * If the retrieval is successful, it returns an HTTP 200 (OK) status
-     * with the products in the response body.
-     * If no products are found, it returns an HTTP 204 (No Content) status.
+     *         Si la récupération est réussie, retourne un statut HTTP 200 (OK)
+     *         avec les produits dans le corps de la réponse.
+     *         Si aucun produit n'est trouvé, retourne un statut HTTP 204 (No Content).
      *
-     * This method allows the client to retrieve all products from the database for display purposes.
+     * Cette méthode permet au client de récupérer tous les produits de la base de données
+     * à des fins d'affichage.
      */
     @GetMapping
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
@@ -41,16 +42,17 @@ public class ProductController {
     }
 
     /**
-     * Retrieves the information of a product by its ID.
+     * Récupère les informations d'un produit par son ID.
      *
-     * @param id The ID of the product to retrieve.
-     * @return A {@link ResponseEntity} containing the information of the {@link Product}.
+     * @param id L'ID du produit à récupérer.
+     * @return Un {@link ResponseEntity} contenant les informations du {@link Product}.
      *
-     * If the retrieval is successful, it returns an HTTP 200 (OK) status
-     * with the product details in the response body.
-     * If the product does not exist, it returns an HTTP 404 (Not Found) status.
+     *         Si la récupération est réussie, retourne un statut HTTP 200 (OK)
+     *         avec les détails du produit dans le corps de la réponse.
+     *         Si le produit n'existe pas, retourne un statut HTTP 404 (Not Found).
      *
-     * This method allows the client to retrieve the details of a product for display purposes.
+     * Cette méthode permet au client de récupérer les détails d'un produit
+     * à des fins d'affichage.
      */
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable int id) {
@@ -62,12 +64,32 @@ public class ProductController {
         }
     }
 
+    /**
+     * Ajoute une taille spécifique à un produit.
+     *
+     * @param productId L'ID du produit auquel ajouter la taille.
+     * @param sizeId    L'ID de la taille à ajouter.
+     * @return Un {@link ResponseEntity} contenant le produit mis à jour en tant que {@link ProductDTO}.
+     *
+     *         Si l'opération est réussie, retourne un statut HTTP 200 (OK)
+     *         avec le produit mis à jour dans le corps de la réponse.
+     */
     @PutMapping("/{productId}/sizes/{sizeId}")
     public ResponseEntity<ProductDTO> addSizeToProduct(@PathVariable int productId, @PathVariable int sizeId) {
         Product updatedProduct = productService.addSizeToProduct(productId, sizeId);
         return ResponseEntity.ok(new ProductDTO(updatedProduct));
     }
 
+    /**
+     * Supprime une taille spécifique d'un produit.
+     *
+     * @param productId L'ID du produit auquel retirer la taille.
+     * @param sizeId    L'ID de la taille à retirer.
+     * @return Un {@link ResponseEntity} contenant le produit mis à jour en tant que {@link ProductDTO}.
+     *
+     *         Si l'opération est réussie, retourne un statut HTTP 200 (OK)
+     *         avec le produit mis à jour dans le corps de la réponse.
+     */
     @DeleteMapping("/{productId}/sizes/{sizeId}")
     public ResponseEntity<ProductDTO> removeSizeFromProduct(@PathVariable int productId, @PathVariable int sizeId) {
         Product updatedProduct = productService.removeSizeFromProduct(productId, sizeId);

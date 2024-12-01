@@ -66,6 +66,4 @@ DELETE http://localhost:8090/carts/1/products/2
 GET http://localhost:8090/carts/1
 
 ###
-PUT http://localhost:8090/products/1/sizes/1
-
-
+PUT http://localhost:8090/products/1/sizes/5
