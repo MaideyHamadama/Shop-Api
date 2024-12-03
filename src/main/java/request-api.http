@@ -49,6 +49,13 @@ Content-Type: application/json
 }
 
 ### Mettre à jour la quantité d'un produit dans un panier
+01:55:50
+
+
+
+3
+
+
 PUT http://localhost:8090/carts/1/products/1
 Content-Type: application/json
 
@@ -67,3 +74,12 @@ GET http://localhost:8090/carts/1
 
 ###
 PUT http://localhost:8090/products/1/sizes/5
+
+### Ajouter du stock à un produit 
+POST http://localhost:8090/stock/add/1?quantityToAdd=10
+
+###
+GET http://localhost:8090/stock/quantity/1
+
+###
+POST http://localhost:8090/stock/remove/1?quantityToRemove=1

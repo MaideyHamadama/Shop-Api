@@ -20,6 +20,10 @@ public class Product {
     @Column(name = "productName", nullable = false)
     private String productName;
 
+    // Relation One-to-One avec Stock
+    @OneToOne(mappedBy = "product")
+    private Stock stock;
+
     @Column(name = "price", nullable = false)
     private double price;
 
