@@ -1,9 +1,6 @@
 package com.shop.backend.controller;
 
-import com.shop.backend.dto.ProductCartRequest;
-import com.shop.backend.dto.ProductQuantityRequest;
-import com.shop.backend.dto.ShoppingCartDTO;
-import com.shop.backend.dto.UserCartRequest;
+import com.shop.backend.dto.*;
 import com.shop.backend.entity.ShoppingCart;
 import com.shop.backend.service.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +28,7 @@ public class ShoppingCartController {
      * ou un utilisateur anonyme si aucune information n'est fournie.
      */
     @PostMapping
-    public ResponseEntity<ShoppingCartDTO> newCart(@RequestBody(required = false) UserCartRequest userCartRequest) {
+    public ResponseEntity<ShoppingCartDTO> newCart(@RequestBody(required = false) AddToCartRequest userCartRequest) {
         Integer userId = (userCartRequest != null) ? userCartRequest.getUserId() : null;
         ShoppingCartDTO cartDTO = new ShoppingCartDTO(shoppingCartService.createNewCart(userId));
         return ResponseEntity.ok(cartDTO);
@@ -44,17 +41,17 @@ public class ShoppingCartController {
      * @param productCartRequest Les détails du produit et de la quantité à ajouter.
      * @return Un {@link ResponseEntity} contenant le panier mis à jour sous forme de DTO.
      */
-    @PostMapping("/{cartId}/products")
-    public ResponseEntity<ShoppingCartDTO> addToCart(
-            @PathVariable(required = false) Integer cartId,
-            @RequestBody ProductCartRequest productCartRequest) {
+    @PostMapping("/products")
+    public ResponseEntity<ShoppingCartDTO> addToCart(@RequestBody AddToCartRequest request) {
         ShoppingCartDTO updatedCart = shoppingCartService.addProductToCart(
-                cartId,
-                productCartRequest.getProductId(),
-                productCartRequest.getQuantity(),
-                productCartRequest.getUserId());
+                request.getCartId(),
+                request.getProductId(),
+                request.getQuantity(),
+                request.getUserId()
+        );
         return ResponseEntity.ok(updatedCart);
     }
+
 
     /**
      * Met à jour la quantité d'un produit dans le panier.
@@ -68,7 +65,7 @@ public class ShoppingCartController {
     public ResponseEntity<ShoppingCartDTO> updateQuantity(
             @PathVariable int cartId,
             @PathVariable int productId,
-            @RequestBody ProductQuantityRequest productQuantityRequest) {
+            @RequestBody  AddToCartRequest productQuantityRequest) {
         ShoppingCartDTO updatedCart = shoppingCartService.updateProductQuantity(
                 cartId,
                 productId,
