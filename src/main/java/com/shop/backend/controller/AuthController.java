@@ -7,24 +7,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/auth/register ")
 @CrossOrigin(origins = "http://localhost:3000") 
 public class AuthController {
 
     @Autowired
     private AuthService authService;
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        try {
-            authService.register(user);
-            return ResponseEntity.ok("Inscription réussie !");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+    @PostMapping("auth/register")
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
+        // Logique d'inscription
+        if (user == null || user.getEmail() == null || user.getPassword() == null) {
+            return ResponseEntity.badRequest().body("Tous les champs sont requis.");
         }
+        // Simuler un enregistrement utilisateur
+        System.out.println("Utilisateur enregistré : " + user);
+        // Réponse réussie
+        return ResponseEntity.ok("Utilisateur enregistré avec succès !");
     }
 
-    @PostMapping("/login")
+    @PostMapping("auth/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         try {
             String token = authService.login(user.getEmail(), user.getPassword());

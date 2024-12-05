@@ -83,3 +83,22 @@ GET http://localhost:8090/stock/quantity/1
 
 ###
 POST http://localhost:8090/stock/remove/1?quantityToRemove=1
+
+###  Inscrire un utilisateur
+POST http://localhost:8090/auth/register
+
+{
+  "username": "JohnDoe",
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+
+
+
+### Connexion d'un utilisateur
+GET http://localhost:8090/auth/login
+
+{
+  "email": "test@example.com",
+  "password": "securepassword"
+}
