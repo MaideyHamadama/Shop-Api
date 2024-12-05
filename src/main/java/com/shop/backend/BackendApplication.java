@@ -17,7 +17,11 @@ public class BackendApplication {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(@SuppressWarnings("null") CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:3000");
+                registry.addMapping("/**") // Permet toutes les routes
+                        .allowedOrigins("http://localhost:3000") // Autorise React (localhost:3000)
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Autorise ces méthodes HTTP
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }
