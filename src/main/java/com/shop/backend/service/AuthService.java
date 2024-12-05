@@ -1,7 +1,10 @@
 package com.shop.backend.service;
 
+import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,7 +21,7 @@ public class AuthService {
     @Autowired
     private UserRepository userRepository;
 
-    private final String secretKey = "your_secret_key"; // Clé secrète pour JWT
+    private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
     public User register(User user) throws Exception {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
@@ -47,4 +50,14 @@ public class AuthService {
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
     }
+    public User findByEmail(String email) throws Exception {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new Exception("Utilisateur non trouvé."));
+    }
+
+    public Key getSecretKey() {
+        return this.secretKey; // Retourne la clé pour le contrôleur
+    }
+
+
 }
