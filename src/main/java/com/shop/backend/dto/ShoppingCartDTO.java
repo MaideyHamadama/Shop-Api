@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 /**
  * Classe de transfert de données (DTO) pour représenter un panier d'achat.
- * Permet de mapper les entités {@link ShoppingCart} pour les besoins des échanges de données.
  */
 public class ShoppingCartDTO {
 
@@ -17,10 +16,7 @@ public class ShoppingCartDTO {
     private double cartTotalPrice;
     private double cartTotalPriceExcludingVAT;
     private double tvaRate;
-
-    // ===========================
-    //        Constructeurs
-    // ===========================
+    private int numberOfProducts;
 
     /**
      * Constructeur par défaut.
@@ -41,11 +37,12 @@ public class ShoppingCartDTO {
                 .map(ShoppingCartLineDTO::new)
                 .collect(Collectors.toList());
         this.tvaRate = cart.getTvaRate();
+        this.numberOfProducts = cart.getNumberOfProducts();
     }
 
-    // ===========================
-    //    Getters et Setters
-    // ===========================
+    // ============================
+    // Getters & Setters
+    // ============================
 
     public int getCartID() {
         return cartID;
@@ -89,5 +86,13 @@ public class ShoppingCartDTO {
 
     public double getTvaRate() {
         return tvaRate;
+    }
+
+    public int getNumberOfProducts() {
+        return numberOfProducts;
+    }
+
+    public void setNumberOfProducts(int numberOfProducts) {
+        this.numberOfProducts = numberOfProducts;
     }
 }

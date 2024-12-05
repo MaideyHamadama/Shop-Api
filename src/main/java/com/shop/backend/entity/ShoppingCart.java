@@ -56,6 +56,20 @@ public class ShoppingCart {
         this.cartTotalPriceExcludingVAT = 0.0;
     }
 
+
+    // ===========================
+    //         Méthodes
+    // ===========================
+
+    /**
+     * Calcule le nombre total de produits dans le panier.
+     *
+     * @return Le nombre total de produits.
+     */
+    public int getNumberOfProducts() {
+        return cartProducts.stream().mapToInt(ShoppingCartLine::getQuantity).sum();
+    }
+
     // ==========================
     //    Getters et Setters
     // ==========================
