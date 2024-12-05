@@ -4,7 +4,6 @@ import com.shop.backend.entity.ShoppingCartLine;
 
 /**
  * Classe de transfert de données (DTO) pour représenter une ligne de panier d'achat.
- * Permet de mapper les entités {@link ShoppingCartLine} pour les besoins des échanges de données.
  */
 public class ShoppingCartLineDTO {
 
@@ -13,10 +12,8 @@ public class ShoppingCartLineDTO {
     private int quantity;
     private double totalPrice; // TTC
     private double totalPriceExcludingVAT; // HT
-
-    // ===========================
-    //        Constructeurs
-    // ===========================
+    private double productUnitPrice; // TTC
+    private String productName;
 
     /**
      * Constructeur par défaut.
@@ -32,14 +29,16 @@ public class ShoppingCartLineDTO {
     public ShoppingCartLineDTO(ShoppingCartLine line) {
         this.id = line.getId();
         this.productId = line.getProduct().getIdProduct();
+        this.productName = line.getProduct().getProductName();
         this.quantity = line.getQuantity();
         this.totalPrice = line.getTotalPrice(); // TTC
         this.totalPriceExcludingVAT = line.getTotalPriceExcludingVAT(); // HT
+        this.productUnitPrice = line.getProduct().getPrice(); // TTC
     }
 
-    // ===========================
-    //    Getters et Setters
-    // ===========================
+    // ============================
+    // Getters & Setters
+    // ============================
 
     public int getId() {
         return id;
@@ -79,5 +78,21 @@ public class ShoppingCartLineDTO {
 
     public void setTotalPriceExcludingVAT(double totalPriceExcludingVAT) {
         this.totalPriceExcludingVAT = totalPriceExcludingVAT;
+    }
+
+    public double getProductUnitPrice() {
+        return productUnitPrice;
+    }
+
+    public void setProductUnitPrice(double productUnitPrice) {
+        this.productUnitPrice = productUnitPrice;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 }

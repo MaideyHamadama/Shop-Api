@@ -34,12 +34,6 @@ public class ShoppingCartService {
     //        Méthodes
     // ===========================
 
-    public ShoppingCart getShoppingCartByIdOrCreate(int cartId, Integer userId) {
-        return shoppingCartRepository.findById(cartId).orElseGet(() -> {
-            return createNewCart(userId);
-        });
-    }
-
     public ShoppingCart getShoppingCartById(int cartId) {
         return shoppingCartRepository.findById(cartId)
                 .orElseThrow(() -> new RuntimeException("Panier non trouvé avec l'ID: " + cartId));
@@ -94,17 +88,21 @@ public class ShoppingCartService {
     }
 
     public ShoppingCartDTO addProductToCart(Integer cartId, int productId, int quantity, Integer userId) {
-        ShoppingCart cart = (cartId != null && cartId != 0) ?
-                getShoppingCartByIdOrCreate(cartId, userId) :
-                createNewCart(userId);
+        if (cartId == null || cartId == 0) {
+            throw new RuntimeException("Le panier spécifié n'existe pas. Veuillez créer un panier avant d'ajouter un produit.");
+        }
+
+        ShoppingCart cart = getShoppingCartById(cartId);
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Produit non trouvé avec l'ID: " + productId));
+
         findOrCreateCartLine(cart, product, quantity);
         reCalculateTotalPrice(cart);
         shoppingCartRepository.save(cart);
         return new ShoppingCartDTO(cart);
     }
+
 
     public ShoppingCartDTO updateProductQuantity(int cartId, int productId, int quantity) {
         ShoppingCart cart = getShoppingCartById(cartId);
