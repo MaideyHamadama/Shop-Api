@@ -17,6 +17,7 @@ public class ProductDTO {
     private double price;
     private String description;
     private int brandId;
+    private String brandName;
     private String category;
     private String imageURL;
     private List<String> adultSizes;
@@ -43,6 +44,7 @@ public class ProductDTO {
         this.price = product.getPrice();
         this.description = product.getDescription();
         this.brandId = product.getBrand().getIdBrand();
+        this.brandName = product.getBrand().getBrandName();
         this.category = product.getCategory().name();
         this.imageURL = product.getImage() != null ? product.getImage().getImageURL() : null;
         this.adultSizes = product.getSizes().stream()
@@ -114,6 +116,14 @@ public class ProductDTO {
 
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
     }
 
     public List<String> getAdultSizes() {
