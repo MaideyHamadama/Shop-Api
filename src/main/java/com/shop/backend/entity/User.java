@@ -33,6 +33,9 @@ public class User {
     @Column(name = "city")
     private String city;
 
+    @Column(name = "codePostal")
+    private int codePostal;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
     private ShoppingCart shoppingCart;
 
@@ -56,18 +59,35 @@ public class User {
      * @param address     L'adresse de l'utilisateur.
      * @param city        La ville de l'utilisateur.
      */
-    public User(String userName, String userSurname, String email, String password, String address, String city) {
+    public User(String userName, String userSurname, String email, String password, String address, String city, int codePostal) {
         this.userName = userName;
         this.userSurname = userSurname;
         this.email = email;
         this.password = password;
         this.address = address;
         this.city = city;
+        this.codePostal = codePostal;
     }
 
     // ===========================
     //    Getters et Setters
     // ===========================
+
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
+    }
+
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
+
+    public int getCodePostal() {
+        return codePostal;
+    }
+
+    public void setCodePostal(int codePostal) {
+        this.codePostal = codePostal;
+    }
 
     public int getUserID() {
         return userID;
