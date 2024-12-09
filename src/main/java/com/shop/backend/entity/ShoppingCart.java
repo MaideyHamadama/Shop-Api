@@ -15,8 +15,8 @@ public class ShoppingCart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cartID")
-    private int cartID;
+    @Column(name = "cartId")
+    private int cartId;
 
     @OneToOne
     @JoinColumn(name = "userID", nullable = true)
@@ -74,12 +74,12 @@ public class ShoppingCart {
     //    Getters et Setters
     // ==========================
 
-    public int getCartID() {
-        return cartID;
+    public int getCartId() {
+        return cartId;
     }
 
-    public void setCartID(int cartID) {
-        this.cartID = cartID;
+    public void setCartId(int cartId) {
+        this.cartId = cartId;
     }
 
     public User getUser() {

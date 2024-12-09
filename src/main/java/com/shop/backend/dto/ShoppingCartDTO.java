@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  */
 public class ShoppingCartDTO {
 
-    private int cartID;
+    private int cartId;
     private Integer userId;
     private List<ShoppingCartLineDTO> cartProducts;
     private double cartTotalPrice;
@@ -30,7 +30,7 @@ public class ShoppingCartDTO {
      * @param cart L'entité {@link ShoppingCart} à mapper.
      */
     public ShoppingCartDTO(ShoppingCart cart) {
-        this.cartID = cart.getCartID();
+        this.cartId = cart.getCartId();
         this.cartTotalPrice = cart.getCartTotalPrice();
         this.cartTotalPriceExcludingVAT = cart.getCartTotalPriceExcludingVAT();
         this.cartProducts = cart.getCartProducts().stream()
@@ -44,12 +44,12 @@ public class ShoppingCartDTO {
     // Getters & Setters
     // ============================
 
-    public int getCartID() {
-        return cartID;
+    public int getCartId() {
+        return cartId;
     }
 
-    public void setCartID(int cartID) {
-        this.cartID = cartID;
+    public void setCartId(int cartId) {
+        this.cartId = cartId;
     }
 
     public Integer getUserId() {

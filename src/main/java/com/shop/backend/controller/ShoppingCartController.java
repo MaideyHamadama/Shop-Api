@@ -66,7 +66,7 @@ public class ShoppingCartController {
         if (cartId == null || shoppingCartService.getShoppingCartById(cartId) == null) {
             // Crée un nouveau panier (anonyme ou associé à l'utilisateur)
             ShoppingCart newCart = shoppingCartService.createNewCart(request.getUserId());
-            cartId = newCart.getCartID();
+            cartId = newCart.getCartId();
 
             // Met à jour le cookie avec le nouvel ID de panier
             Cookie cookie = new Cookie("cartId", String.valueOf(cartId));
