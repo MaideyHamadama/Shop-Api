@@ -1,6 +1,9 @@
 package com.shop.backend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 /**
  * Entité représentant un utilisateur dans la base de données.
@@ -16,15 +19,21 @@ public class User {
     private int userID;
 
     @Column(name = "userName", nullable = false)
+    @NotEmpty(message = "Le nom est requis")
     private String userName;
 
     @Column(name = "userSurname", nullable = false)
+    @NotEmpty(message = "Le prénom est requis")
     private String userSurname;
 
     @Column(name = "email", nullable = false, unique = true)
+    @NotEmpty(message = "L'email est requis")
+    @Email(message = "L'email doit être valide")
     private String email;
 
     @Column(name = "password", nullable = false)
+    @NotEmpty(message = "Le mot de passe est requis")
+    @Size(min = 6, message = "Le mot de passe doit comporter au moins 6 caractères")
     private String password;
 
     @Column(name = "address")
@@ -33,62 +42,32 @@ public class User {
     @Column(name = "city")
     private String city;
 
-    @Column(name = "codePostal")
-    private int codePostal;
-
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
     private ShoppingCart shoppingCart;
 
-    // ===========================
-    //        Constructeurs
-    // ===========================
-
-    /**
-     * Constructeur par défaut.
-     */
-    public User() {
-    }
-
-    /**
-     * Constructeur complet pour créer une instance de User avec tous ses attributs.
-     *
-     * @param userName    Le prénom de l'utilisateur.
-     * @param userSurname Le nom de l'utilisateur.
-     * @param email       L'email de l'utilisateur.
-     * @param password    Le mot de passe de l'utilisateur.
-     * @param address     L'adresse de l'utilisateur.
-     * @param city        La ville de l'utilisateur.
-     */
-    public User(String userName, String userSurname, String email, String password, String address, String city, int codePostal) {
+    // Constructeurs
+    public User(String userName, String userSurname, String email, String password, String address, String city, ShoppingCart shoppingCart) {
         this.userName = userName;
         this.userSurname = userSurname;
         this.email = email;
         this.password = password;
         this.address = address;
         this.city = city;
-        this.codePostal = codePostal;
-    }
-
-    // ===========================
-    //    Getters et Setters
-    // ===========================
-
-    public ShoppingCart getShoppingCart() {
-        return shoppingCart;
-    }
-
-    public void setShoppingCart(ShoppingCart shoppingCart) {
         this.shoppingCart = shoppingCart;
     }
 
-    public int getCodePostal() {
-        return codePostal;
+    public User() {}
+
+    public User(String userName, String userSurname, String email, String password, String address, String city) {
+        this.userName = userName;
+        this.userSurname = userSurname;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+        this.city = city;
     }
 
-    public void setCodePostal(int codePostal) {
-        this.codePostal = codePostal;
-    }
-
+    // Getters et Setters
     public int getUserID() {
         return userID;
     }
@@ -143,5 +122,13 @@ public class User {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
+    }
+
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
     }
 }
