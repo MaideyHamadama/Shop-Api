@@ -8,7 +8,7 @@ public class UserDTO {
     private String userSurname;
     private String address;
     private String city;
-    private int codePostal;
+    private int postalCode;
     private Integer cartId;
     private int numberOfProductsInCart;
 
@@ -25,7 +25,7 @@ public class UserDTO {
         this.userSurname = user.getUserSurname();
         this.address = user.getAddress();
         this.city = user.getCity();
-        this.codePostal = user.getCodePostal();
+        this.postalCode = user.getPostalCode();
         this.cartId = user.getShoppingCart() != null ? user.getShoppingCart().getCartId() : null;
         this.numberOfProductsInCart = user.getShoppingCart() != null ? user.getShoppingCart().getCartProducts().size() : 0;
     }
@@ -82,12 +82,12 @@ public class UserDTO {
         this.city = city;
     }
 
-    public int getCodePostal() {
-        return codePostal;
+    public int getPostalCode() {
+        return postalCode;
     }
 
-    public void setCodePostal(int codePostal) {
-        this.codePostal = codePostal;
+    public void setPostalCode(int postalCode) {
+        this.postalCode = postalCode;
     }
 
     public int getNumberOfProductsInCart() {

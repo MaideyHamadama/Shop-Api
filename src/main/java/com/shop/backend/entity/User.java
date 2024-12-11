@@ -3,6 +3,7 @@ package com.shop.backend.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 /**
@@ -43,14 +44,14 @@ public class User {
     private String city;
 
     @Column(name = "postalCode")
-    @NotEmpty(message = "Le code postal est requis")
-    private String postalCode;  // Nouveau champ pour le code postal
+    @NotNull(message = "Le code postal est requis")
+    private int postalCode;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
     private ShoppingCart shoppingCart;
 
     // Constructeurs
-    public User(String userName, String userSurname, String email, String password, String address, String city, String postalCode, ShoppingCart shoppingCart) {
+    public User(String userName, String userSurname, String email, String password, String address, String city, int postalCode, ShoppingCart shoppingCart) {
         this.userName = userName;
         this.userSurname = userSurname;
         this.email = email;
@@ -63,7 +64,7 @@ public class User {
 
     public User() {}
 
-    public User(String userName, String userSurname, String email, String password, String address, String city, String postalCode) {
+    public User(String userName, String userSurname, String email, String password, String address, String city, int postalCode) {
         this.userName = userName;
         this.userSurname = userSurname;
         this.email = email;
@@ -130,11 +131,11 @@ public class User {
         this.city = city;
     }
 
-    public String getPostalCode() {
+    public int getPostalCode() {
         return postalCode;  // Getter pour le code postal
     }
 
-    public void setPostalCode(String postalCode) {
+    public void setPostalCode(int postalCode) {
         this.postalCode = postalCode;  // Setter pour le code postal
     }
 
