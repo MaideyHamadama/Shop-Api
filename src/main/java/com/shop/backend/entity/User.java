@@ -42,29 +42,35 @@ public class User {
     @Column(name = "city")
     private String city;
 
+    @Column(name = "postalCode")
+    @NotEmpty(message = "Le code postal est requis")
+    private String postalCode;  // Nouveau champ pour le code postal
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
     private ShoppingCart shoppingCart;
 
     // Constructeurs
-    public User(String userName, String userSurname, String email, String password, String address, String city, ShoppingCart shoppingCart) {
+    public User(String userName, String userSurname, String email, String password, String address, String city, String postalCode, ShoppingCart shoppingCart) {
         this.userName = userName;
         this.userSurname = userSurname;
         this.email = email;
         this.password = password;
         this.address = address;
         this.city = city;
+        this.postalCode = postalCode;  // Initialisation du code postal
         this.shoppingCart = shoppingCart;
     }
 
     public User() {}
 
-    public User(String userName, String userSurname, String email, String password, String address, String city) {
+    public User(String userName, String userSurname, String email, String password, String address, String city, String postalCode) {
         this.userName = userName;
         this.userSurname = userSurname;
         this.email = email;
         this.password = password;
         this.address = address;
         this.city = city;
+        this.postalCode = postalCode;  // Initialisation du code postal
     }
 
     // Getters et Setters
@@ -122,6 +128,14 @@ public class User {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getPostalCode() {
+        return postalCode;  // Getter pour le code postal
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;  // Setter pour le code postal
     }
 
     public ShoppingCart getShoppingCart() {
