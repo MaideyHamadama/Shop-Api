@@ -30,6 +30,8 @@ public class ShoppingCartService {
     @Autowired
     private UserRepository userRepository;
 
+    boolean productFound = false;
+
     // ===========================
     //        Méthodes
     // ===========================
@@ -57,6 +59,36 @@ public class ShoppingCartService {
                 .filter(line -> line.getProduct().getIdProduct() == productId)
                 .findFirst()
                 .orElse(null);
+    }
+ public void mergeCarts(ShoppingCart existingCart, ShoppingCart cookieCart) {
+
+        // Parcourir les produits du panier des cookies
+        for (ShoppingCartLine cookieLine : cookieCart.getCartProducts()) {
+            productFound = false;
+
+            // Parcourir les produits du panier existant en db
+            for (ShoppingCartLine existingLine : existingCart.getCartProducts()) {
+                if (existingLine.getProduct().getIdProduct() == cookieLine.getProduct().getIdProduct()) {
+                    // Produit déjà dans le panier : mise à jour de la quantité et recalcul du total
+                    existingLine.setQuantity(existingLine.getQuantity() + cookieLine.getQuantity());
+                    existingLine.setTotalPrice(existingLine.getProduct().getPrice() * existingLine.getQuantity());
+                    productFound = true;
+                    break;
+                }
+            }
+
+            // Produit non trouvé : on ajoute une nouvelle ligne au panier existant
+            if (!productFound) {
+                ShoppingCartLine newLine = new ShoppingCartLine(existingCart, cookieLine.getProduct(), cookieLine.getQuantity());
+                existingCart.getCartProducts().add(newLine);
+            }
+        }
+
+        // Recalculer le total du panier après fusion
+        reCalculateTotalPrice(existingCart);
+
+        // Sauvegarder les changements
+        shoppingCartRepository.save(existingCart);
     }
 
     private ShoppingCartLine findOrCreateCartLine(ShoppingCart cart, Product product, int quantity) {
