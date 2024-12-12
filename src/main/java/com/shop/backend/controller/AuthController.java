@@ -1,8 +1,11 @@
 package com.shop.backend.controller;
 
 import com.shop.backend.dto.UserDTO;
+import com.shop.backend.entity.ShoppingCart;
 import com.shop.backend.entity.User;
+import com.shop.backend.repository.ShoppingCartRepository;
 import com.shop.backend.service.AuthService;
+import com.shop.backend.service.ShoppingCartService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,11 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @Autowired
+    private ShoppingCartService shoppingCartService;
+
+    @Autowired
+    private ShoppingCartRepository shoppingCartRepository;
 
     private Key secretKey;
     String cartId = null;
@@ -45,10 +53,16 @@ public class AuthController {
             String rawPassword = user.getPassword();
             authService.register(user);
 
-            // Assigner le panier provenant des cookies à l'utilisateur
-            if (cartId != null) {
-                authService.assignCartIdToUser(user.getEmail(), cartId);
-            }
+//             Vérifier si le cookie `cartId` existe
+                    if (cartId != null) {
+                        // Assigner le panier existant (provenant des cookies) à l'utilisateur
+                        authService.assignCartIdToUser(user, cartId);
+                    } else {
+                        // Si aucun cookie n'est présent, créer un nouveau panier
+                        ShoppingCart newCart = shoppingCartService.createNewCart(user.getUserId());
+                        user.setShoppingCart(newCart); // Assigner le nouveau panier à l'utilisateur
+                        shoppingCartRepository.save(newCart); // Sauvegarder le panier
+                    }
 
             // Générer un token pour authentifier immédiatement l'utilisateur
             String token = authService.login(user.getEmail(), rawPassword);
@@ -87,7 +101,7 @@ public class AuthController {
             // Vérification si le cartId a été trouvé
             // Assigner le panier à l'utilisateur
             if (cartId != null) {
-                authService.assignCartIdToUser(user.getEmail(), cartId);
+                authService.assignCartIdToUser(user, cartId);
             }
 
             return ResponseEntity.ok(Map.of(

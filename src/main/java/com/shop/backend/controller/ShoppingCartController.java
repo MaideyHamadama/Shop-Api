@@ -2,6 +2,8 @@ package com.shop.backend.controller;
 
 import com.shop.backend.dto.*;
 import com.shop.backend.entity.ShoppingCart;
+import com.shop.backend.repository.UserRepository;
+import com.shop.backend.service.AuthService;
 import com.shop.backend.service.ShoppingCartService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * Contrôleur REST pour gérer les opérations relatives aux paniers d'achat.
- *
+ * <p>
  * Fournit des points d'accès pour :
  * - Créer un nouveau panier.
  * - Ajouter un produit dans un panier.
@@ -25,10 +27,14 @@ public class ShoppingCartController {
 
     @Autowired
     private ShoppingCartService shoppingCartService;
+    @Autowired
+    private AuthService authService;
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * Crée un nouveau panier d'achat.
-     *
+     * <p>
      * Si un utilisateur est identifié dans la requête, le panier sera associé à cet utilisateur.
      * Sinon, un panier anonyme sera créé.
      *
@@ -38,13 +44,23 @@ public class ShoppingCartController {
     @PostMapping
     public ResponseEntity<ShoppingCartDTO> newCart(@RequestBody(required = false) AddToCartRequest userCartRequest) {
         Integer userId = (userCartRequest != null) ? userCartRequest.getUserId() : null;
-        ShoppingCartDTO cartDTO = new ShoppingCartDTO(shoppingCartService.createNewCart(userId));
-        return ResponseEntity.ok(cartDTO);
+        // Créer un nouveau panier et l'associer à un utilisateur si un `userId` est fourni
+        ShoppingCart cart = shoppingCartService.createNewCart(userId);
+        // Associer le panier si un `userId` est fourni
+        if (userId != null) {
+            userRepository.findById(userId).ifPresentOrElse(
+                    user -> authService.assignCartIdToUser(user, String.valueOf(cart.getCartId())),
+                    () -> {
+                        throw new RuntimeException("Utilisateur introuvable avec l'ID : " + userId);
+                    }
+            );
+        }
+        return ResponseEntity.ok(new ShoppingCartDTO(cart));
     }
 
     /**
      * Ajoute un produit à un panier existant ou en crée un nouveau si nécessaire.
-     *
+     * <p>
      * Si le panier n'existe pas, un nouveau panier est créé pour l'utilisateur spécifié
      * (ou pour un utilisateur anonyme si aucun utilisateur n'est fourni).
      *
@@ -89,14 +105,13 @@ public class ShoppingCartController {
     }
 
 
-
     /**
      * Met à jour la quantité d'un produit dans un panier.
-     *
+     * <p>
      * Permet d'ajuster la quantité d'un produit déjà présent dans le panier.
      *
-     * @param cartId                L'ID du panier.
-     * @param productId             L'ID du produit à mettre à jour.
+     * @param cartId                 L'ID du panier.
+     * @param productId              L'ID du produit à mettre à jour.
      * @param productQuantityRequest Un objet contenant la nouvelle quantité du produit.
      * @return Un {@link ResponseEntity} contenant le panier mis à jour sous forme de DTO.
      */
@@ -114,14 +129,14 @@ public class ShoppingCartController {
 
     /**
      * Supprime un produit d'un panier.
-     *
+     * <p>
      * Retire le produit spécifié du panier. Si le panier devient vide après cette opération,
      * une réponse avec un statut HTTP 204 (No Content) est renvoyée.
      *
      * @param cartId    L'ID du panier.
      * @param productId L'ID du produit à supprimer.
      * @return Un {@link ResponseEntity} contenant le panier mis à jour sous forme de DTO
-     *         ou un statut HTTP 204 si le panier est vide.
+     * ou un statut HTTP 204 si le panier est vide.
      */
     @DeleteMapping("/{cartId}/products/{productId}")
     public ResponseEntity<ShoppingCartDTO> removeProductFromCart(@PathVariable int cartId, @PathVariable int productId) {
@@ -138,7 +153,7 @@ public class ShoppingCartController {
 
     /**
      * Récupère un panier par son ID.
-     *
+     * <p>
      * Permet d'obtenir les détails d'un panier existant, y compris les produits qu'il contient.
      *
      * @param cartId L'ID du panier à récupérer.
