@@ -1,0 +1,11 @@
+### Récupérer la liste des catégories
+GET http://localhost:8090/categories
+
+### Récupérer les produits d'une catégorie (MEN)
+GET http://localhost:8090/categories/MEN/products
+
+### Récupérer les produits d'une catégorie (GIRL)
+GET http://localhost:8090/categories/GIRL/products
+
+### Récupérer les produits d'une catégorie (BOY)
+GET http://localhost:8090/categories/BOY/products

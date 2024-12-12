@@ -1,0 +1,51 @@
+### Créer un nouveau panier sans utilisateur
+POST http://localhost:8090/carts
+Content-Type: application/json
+
+{
+  "userId": null
+}
+
+### Créer un nouveau panier pour un utilisateur
+POST http://localhost:8090/carts
+Content-Type: application/json
+
+{
+  "userId": 1
+}
+
+### Ajouter un produit à un panier existant
+POST http://localhost:8090/carts/products
+Content-Type: application/json
+
+{
+  "cartId": 1,
+  "productId": 1,
+  "quantity": 2,
+  "userId": 1
+}
+
+### Ajouter un produit à un panier existant
+POST http://localhost:8090/carts/1/products
+Content-Type: application/json
+
+{
+  "productId": 1,
+  "quantity": 4,
+  "userId": null
+}
+
+### Mettre à jour la quantité d'un produit dans un panier
+
+PUT http://localhost:8090/carts/1/products/1
+Content-Type: application/json
+
+{
+  "quantity": 30
+}
+
+### Supprimer un produit d'un panier
+DELETE http://localhost:8090/carts/1/products/2
+
+### Récupérer un panier par son ID
+GET http://localhost:8090/carts/1

@@ -1,0 +1,27 @@
+###  Inscrire un utilisateur
+POST http://localhost:8090/auth/register
+Content-Type: application/json
+
+{
+  "userName": "Test",
+  "userSurname": "Test",
+  "email": "test@example.com",
+  "password": "password123",
+  "address" : "address",
+  "city" : "city",
+  "postalCode" : 1234
+}
+
+### Récupérer les informations d'un utilisateur
+GET http://localhost:8090/auth/me
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzMzOTk3MDYxLCJleHAiOjE3MzQwODM0NjF9.OpM75JBwEoeHAi_END2CPCe_eMIv-rYmaXRKoY8IVwfA3Uru3pbP_FMrMnmchUx36uZI6QneOMGTi-5YpDs52g
+
+
+### Connexion d'un utilisateur
+POST http://localhost:8090/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}

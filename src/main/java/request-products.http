@@ -1,0 +1,11 @@
+### Récupérer la liste des produits
+GET http://localhost:8090/products
+
+### Ajouter du stock à un produit
+POST http://localhost:8090/stock/add/1?quantityToAdd=10
+
+### Récupérer la quantité de stock d'un produit
+GET http://localhost:8090/stock/quantity/1
+
+### Supprimer du stock à un produit
+POST http://localhost:8090/stock/remove/1?quantityToRemove=1

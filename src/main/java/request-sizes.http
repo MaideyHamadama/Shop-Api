@@ -1,0 +1,34 @@
+### Ajouter une taille à un produit
+PUT http://localhost:8090/products/1/sizes/5
+
+### Créer une nouvelle taille
+POST http://localhost:8090/sizes
+Content-Type: application/json
+
+{
+    "type": "ADULT",
+    "adultSize": "L",
+    "childSize": null
+}
+
+### Récupérer les tailles pour les adultes
+GET http://localhost:8090/sizes/type/ADULT
+
+### Récupérer les tailles pour les enfants
+GET http://localhost:8090/sizes/type/CHILD
+
+### Récupérer une taille par son ID
+GET http://localhost:8090/sizes/1
+
+### Supprimer une taille
+DELETE http://localhost:8090/sizes/1
+
+### Mettre à jour une taille
+PUT http://localhost:8090/sizes/2
+Content-Type: application/json
+
+{
+    "type": "ADULT",
+    "adultSize": "M",
+    "childSize": null
+}
