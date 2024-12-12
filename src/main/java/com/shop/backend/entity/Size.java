@@ -2,6 +2,9 @@ package com.shop.backend.entity;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Entité représentant une taille dans la base de données.
  * Cette classe est mappée à la table "sizes" et inclut les attributs pour
@@ -27,6 +30,9 @@ public class Size {
     @Column(name = "child_size")
     private ChildSize childSize;
 
+    @ManyToMany(mappedBy = "sizes")
+    private Set<Product> products = new HashSet<>();
+
     // ===========================
     //        Constructeurs
     // ===========================
@@ -40,15 +46,16 @@ public class Size {
     /**
      * Constructeur complet pour initialiser une taille avec ses attributs.
      *
-     * @param type       Le type de la taille (ADULT ou CHILD).
-     * @param adultSize  La taille adulte associée (facultatif).
-     * @param childSize  La taille enfant associée (facultatif).
+     * @param type      Le type de la taille (ADULT ou CHILD).
+     * @param adultSize La taille adulte associée (facultatif).
+     * @param childSize La taille enfant associée (facultatif).
      */
     public Size(SizeType type, AdultSize adultSize, ChildSize childSize) {
         this.type = type;
         this.adultSize = adultSize;
         this.childSize = childSize;
     }
+
 
     // ===========================
     //    Getters et Setters
@@ -84,5 +91,13 @@ public class Size {
 
     public void setChildSize(ChildSize childSize) {
         this.childSize = childSize;
+    }
+
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 }

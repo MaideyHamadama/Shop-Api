@@ -1,8 +1,11 @@
 package com.shop.backend.service;
 
+import com.shop.backend.entity.Product;
 import com.shop.backend.entity.Size;
 import com.shop.backend.entity.SizeType;
+import com.shop.backend.repository.ProductRepository;
 import com.shop.backend.repository.SizeRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,9 @@ public class SizeService {
 
     @Autowired
     private SizeRepository sizeRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     // Créer une taille
     public Size createSize(Size size) {
@@ -41,6 +47,23 @@ public class SizeService {
 
     // Supprimer une taille
     public void deleteSize(int id) {
-        sizeRepository.deleteById(id);
+        Optional<Size> sizeOptional = sizeRepository.findById(id);
+        if (sizeOptional.isPresent()) {
+            Size size = sizeOptional.get();
+
+            // Vérifier s'il y a des produits associés
+            if (!size.getProducts().isEmpty()) {
+                for (Product product : size.getProducts()) {
+                    // Supprimer la taille du set de tailles du produit
+                    product.getSizes().remove(size);
+                    productRepository.save(product); // Sauvegarder les changements
+                }
+            }
+
+            // Supprimer la taille
+            sizeRepository.delete(size);
+        } else {
+            throw new EntityNotFoundException("Size with ID " + id + " not found");
+        }
     }
 }

@@ -2,12 +2,16 @@ package com.shop.backend.controller;
 
 import com.shop.backend.entity.Product;
 import com.shop.backend.dto.ProductDTO;
+import com.shop.backend.entity.Size;
+import com.shop.backend.repository.ProductRepository;
 import com.shop.backend.service.ProductService;
+import com.shop.backend.service.SizeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Contrôleur pour gérer les entités {@link Product}.
@@ -22,6 +26,9 @@ public class ProductController {
 
     @Autowired
     private SizeService sizeService;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     /**
      * Récupère la liste de tous les produits depuis la base de données.
@@ -79,15 +86,8 @@ public class ProductController {
      */
     @PutMapping("/{productId}/sizes/{sizeId}")
     public ResponseEntity<ProductDTO> addSizeToProduct(@PathVariable int productId, @PathVariable int sizeId) {
-        Optional<Product> product = productService.getProductById(productId);
-        Optional<Size> size = sizeService.getSizeById(sizeId);
-
-        if (product.isPresent() && size.isPresent()) {
-            product.get().addSize(size.get());
-            productService.saveProduct(product.get()); // Sauvegarder le produit avec la taille ajoutée
-            return ResponseEntity.ok(product.get());
-        }
-        return ResponseEntity.notFound().build();
+     Product updatedProduct = productService.addSizeToProduct(productId, sizeId);
+        return ResponseEntity.ok(new ProductDTO(updatedProduct));
     }
 
     /**

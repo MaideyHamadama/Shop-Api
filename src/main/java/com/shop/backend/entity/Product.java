@@ -2,6 +2,7 @@ package com.shop.backend.entity;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -41,23 +42,23 @@ public class Product {
     @Column(name = "category", nullable = false)
     private Category category;
 
+    /**
+     * Représente l'ensemble des tailles disponibles pour ce produit.
+     * <p>
+     * - Utilise un `Set` pour garantir que chaque taille est unique et éviter les doublons.
+     * - Les tailles peuvent inclure des tailles pour adultes ou pour enfants,
+     * différenciées par leur type (ADULT ou CHILD).
+     * - L'utilisation d'un `Set` est logique car l'ordre des tailles n'est pas
+     * nécessairement important et les duplications doivent être évitées.
+     */
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "product_sizes",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "size_id")
     )
+    private Set<Size> sizes = new HashSet<>();
 
-    /**
-     * Représente l'ensemble des tailles disponibles pour ce produit.
-     *
-     * - Utilise un `Set` pour garantir que chaque taille est unique et éviter les doublons.
-     * - Les tailles peuvent inclure des tailles pour adultes ou pour enfants,
-     *   différenciées par leur type (ADULT ou CHILD).
-     * - L'utilisation d'un `Set` est logique car l'ordre des tailles n'est pas
-     *   nécessairement important et les duplications doivent être évitées.
-     */
-    private Set<Size> sizes;
 
     // ===========================
     //        Constructeurs
@@ -80,6 +81,18 @@ public class Product {
         this.description = description;
         this.brand = brand;
         this.category = category;
+    }
+
+    public Product(int idProduct, String productName, Stock stock, double price, String description, ProductImage image, Brand brand, Category category, Set<Size> sizes) {
+        this.idProduct = idProduct;
+        this.productName = productName;
+        this.stock = stock;
+        this.price = price;
+        this.description = description;
+        this.image = image;
+        this.brand = brand;
+        this.category = category;
+        this.sizes = sizes;
     }
 
     /**
