@@ -75,11 +75,11 @@ public class User {
     }
 
     // Getters et Setters
-    public int getUserID() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserID(int userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
