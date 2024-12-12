@@ -20,6 +20,9 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private SizeService sizeService;
+
     /**
      * Récupère la liste de tous les produits depuis la base de données.
      *
@@ -76,8 +79,15 @@ public class ProductController {
      */
     @PutMapping("/{productId}/sizes/{sizeId}")
     public ResponseEntity<ProductDTO> addSizeToProduct(@PathVariable int productId, @PathVariable int sizeId) {
-        Product updatedProduct = productService.addSizeToProduct(productId, sizeId);
-        return ResponseEntity.ok(new ProductDTO(updatedProduct));
+        Optional<Product> product = productService.getProductById(productId);
+        Optional<Size> size = sizeService.getSizeById(sizeId);
+
+        if (product.isPresent() && size.isPresent()) {
+            product.get().addSize(size.get());
+            productService.saveProduct(product.get()); // Sauvegarder le produit avec la taille ajoutée
+            return ResponseEntity.ok(product.get());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     /**
