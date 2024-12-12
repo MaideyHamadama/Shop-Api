@@ -54,11 +54,7 @@ public class AuthService {
 
     // Assigner le panier provenant des cookies à l'utilisateur
     @Transactional
-    public void assignCartIdToUser(String email, String cartId) {
-
-        // Récupérer l'utilisateur par son email
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Utilisateur non trouve avec l'email : " + email));
+    public void assignCartIdToUser(User user, String cartId) {
 
         // Récupérer le panier déjà associé à l'utilisateur dans la db (s'il existe)
         ShoppingCart existingCart = user.getShoppingCart();
