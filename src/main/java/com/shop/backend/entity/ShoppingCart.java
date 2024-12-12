@@ -19,7 +19,7 @@ public class ShoppingCart {
     private int cartId;
 
     @OneToOne
-    @JoinColumn(name = "userID", nullable = true)
+    @JoinColumn(name = "userId", nullable = true)
     private User user;
 
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

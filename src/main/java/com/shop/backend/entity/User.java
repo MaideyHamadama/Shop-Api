@@ -17,7 +17,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userID;
+    private int userId;
 
     @Column(name = "userName", nullable = false)
     @NotEmpty(message = "Le nom est requis")
@@ -76,11 +76,11 @@ public class User {
 
     // Getters et Setters
     public int getUserID() {
-        return userID;
+        return userId;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUserID(int userId) {
+        this.userId = userId;
     }
 
     public String getUserName() {
