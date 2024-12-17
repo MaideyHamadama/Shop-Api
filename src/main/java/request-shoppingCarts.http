@@ -19,20 +19,25 @@ POST http://localhost:8090/carts/products
 Content-Type: application/json
 
 {
-  "cartId": 1,
-  "productId": 1,
+  "cartId": 12,
+  "productId": 8,
   "quantity": 2,
   "userId": 1
 }
 
 ### Ajouter un produit à un panier existant
-POST http://localhost:8090/carts/1/products
+POST http://localhost:8090/carts/products
 Content-Type: application/json
 
 {
-  "productId": 1,
-  "quantity": 4,
-  "userId": null
+  "cartId": 3,
+  "productId": 8,
+  "quantity": 2,
+  "size": {
+    "type": "ADULT",
+    "adultSize": "M",
+    "childSize": null
+  }
 }
 
 ### Mettre à jour la quantité d'un produit dans un panier
@@ -45,7 +50,16 @@ Content-Type: application/json
 }
 
 ### Supprimer un produit d'un panier
-DELETE http://localhost:8090/carts/1/products/2
+DELETE http://localhost:8090/carts/1/products/1
+Content-Type: application/json
+
+{
+  "adultSize" : "S",
+  "childSize" : null,
+  "type" : "ADULT"
+}
+
+
 
 ### Récupérer un panier par son ID
-GET http://localhost:8090/carts/1
+GET http://localhost:8090/carts/12
