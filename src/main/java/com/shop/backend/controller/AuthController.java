@@ -1,5 +1,6 @@
 package com.shop.backend.controller;
 
+import com.shop.backend.dto.LoginRequest;
 import com.shop.backend.dto.UserDTO;
 import com.shop.backend.entity.ShoppingCart;
 import com.shop.backend.entity.User;
@@ -82,36 +83,39 @@ public class AuthController {
 
 
     // Connexion
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user, HttpServletRequest request) {
-        try {
-            String token = authService.login(user.getEmail(), user.getPassword());
+@PostMapping("/login")
+public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
+    try {
+        // Authentification de l'utilisateur
+        String token = authService.login(loginRequest.getEmail(), loginRequest.getPassword());
 
-            // Récupération du cartId depuis les cookies
-            cartId = null;
-            if (request.getCookies() != null) {
-                for (Cookie cookie : request.getCookies()) {
-                    if ("cartId".equals(cookie.getName())) {
-                        cartId = cookie.getValue();
-                        break;
-                    }
+        String cartId = null;
+
+        // Récupération du cartId depuis les cookies
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("cartId".equals(cookie.getName())) {
+                    cartId = cookie.getValue();
+                    break;
                 }
             }
-
-            // Vérification si le cartId a été trouvé
-            // Assigner le panier à l'utilisateur
-            if (cartId != null) {
-                authService.assignCartIdToUser(user, cartId);
-            }
-
-            return ResponseEntity.ok(Map.of(
-                    "message", "Connexion réussie !",
-                    "token", token
-            ));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
+
+        // Assignation du panier si cartId est présent
+        if (cartId != null) {
+            User user = authService.findByEmail(loginRequest.getEmail());
+            authService.assignCartIdToUser(user, cartId);
+        }
+
+        return ResponseEntity.ok(Map.of(
+                "message", "Connexion réussie !",
+                "token", token
+        ));
+    } catch (Exception e) {
+        return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
     }
+}
+
 
     // Recuperation des infos utilisateurs via le token pour les afficher
     @GetMapping("/me")
