@@ -43,17 +43,12 @@ public class Size {
     public Size() {
     }
 
-    /**
-     * Constructeur complet pour initialiser une taille avec ses attributs.
-     *
-     * @param type      Le type de la taille (ADULT ou CHILD).
-     * @param adultSize La taille adulte associée (facultatif).
-     * @param childSize La taille enfant associée (facultatif).
-     */
-    public Size(SizeType type, AdultSize adultSize, ChildSize childSize) {
-        this.type = type;
-        this.adultSize = adultSize;
+    public Size(Set<Product> products, ChildSize childSize, AdultSize adultSize, SizeType type, Integer id) {
+        this.products = products;
         this.childSize = childSize;
+        this.adultSize = adultSize;
+        this.type = type;
+        this.id = id;
     }
 
 
