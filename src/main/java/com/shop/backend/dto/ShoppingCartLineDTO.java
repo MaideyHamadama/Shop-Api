@@ -10,10 +10,11 @@ public class ShoppingCartLineDTO {
     private int id;
     private int productId;
     private int quantity;
-    private double totalPrice; // TTC
-    private double totalPriceExcludingVAT; // HT
-    private double productUnitPrice; // TTC
+    private double totalPrice;
+    private double totalPriceExcludingVAT;
+    private double productUnitPrice;
     private String productName;
+    private String size;
 
     /**
      * Constructeur par défaut.
@@ -31,9 +32,10 @@ public class ShoppingCartLineDTO {
         this.productId = line.getProduct().getIdProduct();
         this.productName = line.getProduct().getProductName();
         this.quantity = line.getQuantity();
-        this.totalPrice = line.getTotalPrice(); // TTC
-        this.totalPriceExcludingVAT = line.getTotalPriceExcludingVAT(); // HT
-        this.productUnitPrice = line.getProduct().getPrice(); // TTC
+        this.totalPrice = line.getTotalPrice();
+        this.totalPriceExcludingVAT = line.getTotalPriceExcludingVAT();
+        this.productUnitPrice = line.getProduct().getPrice();
+        this.size = line.getSize();
     }
 
     // ============================
@@ -46,6 +48,14 @@ public class ShoppingCartLineDTO {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 
     public int getProductId() {

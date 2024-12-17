@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * Contrôleur REST pour gérer les opérations relatives aux paniers d'achat.
- * <p>
+ *
  * Fournit des points d'accès pour :
  * - Créer un nouveau panier.
  * - Ajouter un produit dans un panier.
@@ -34,7 +34,7 @@ public class ShoppingCartController {
 
     /**
      * Crée un nouveau panier d'achat.
-     * <p>
+     *
      * Si un utilisateur est identifié dans la requête, le panier sera associé à cet utilisateur.
      * Sinon, un panier anonyme sera créé.
      *
@@ -60,7 +60,7 @@ public class ShoppingCartController {
 
     /**
      * Ajoute un produit à un panier existant ou en crée un nouveau si nécessaire.
-     * <p>
+     *
      * Si le panier n'existe pas, un nouveau panier est créé pour l'utilisateur spécifié
      * (ou pour un utilisateur anonyme si aucun utilisateur n'est fourni).
      *
@@ -97,63 +97,57 @@ public class ShoppingCartController {
                 cartId,
                 request.getProductId(),
                 request.getQuantity(),
-                request.getUserId()
+                request.getUserId(),
+                request.getSizeName()
         );
 
         // Retourne le panier mis à jour au client
         return ResponseEntity.ok(updatedCart);
     }
 
+@PutMapping("/{cartId}/products/{productId}")
+public ResponseEntity<ShoppingCartDTO> updateQuantity(
+        @PathVariable int cartId,
+        @PathVariable int productId,
+        @RequestBody AddToCartRequest productQuantityRequest) {
 
-    /**
-     * Met à jour la quantité d'un produit dans un panier.
-     * <p>
-     * Permet d'ajuster la quantité d'un produit déjà présent dans le panier.
-     *
-     * @param cartId                 L'ID du panier.
-     * @param productId              L'ID du produit à mettre à jour.
-     * @param productQuantityRequest Un objet contenant la nouvelle quantité du produit.
-     * @return Un {@link ResponseEntity} contenant le panier mis à jour sous forme de DTO.
-     */
-    @PutMapping("/{cartId}/products/{productId}")
-    public ResponseEntity<ShoppingCartDTO> updateQuantity(
-            @PathVariable int cartId,
-            @PathVariable int productId,
-            @RequestBody AddToCartRequest productQuantityRequest) {
-        ShoppingCartDTO updatedCart = shoppingCartService.updateProductQuantity(
-                cartId,
-                productId,
-                productQuantityRequest.getQuantity());
-        return ResponseEntity.ok(updatedCart);
+    // Passer l'objet Size complet au service
+    ShoppingCartDTO updatedCart = shoppingCartService.updateProductQuantity(
+            cartId,
+            productId,
+            productQuantityRequest.getQuantity(),
+            productQuantityRequest.getSizeName()
+    );
+
+    return ResponseEntity.ok(updatedCart);
+}
+
+
+@DeleteMapping("/{cartId}/products/{productId}")
+public ResponseEntity<?> removeProductFromCart(
+        @PathVariable int cartId,
+        @PathVariable int productId,
+        @RequestBody AddToCartRequest request) {
+
+    if (request.getSize() == null) {
+        throw new IllegalArgumentException("La taille ne peut pas être null.");
     }
 
-    /**
-     * Supprime un produit d'un panier.
-     * <p>
-     * Retire le produit spécifié du panier. Si le panier devient vide après cette opération,
-     * une réponse avec un statut HTTP 204 (No Content) est renvoyée.
-     *
-     * @param cartId    L'ID du panier.
-     * @param productId L'ID du produit à supprimer.
-     * @return Un {@link ResponseEntity} contenant le panier mis à jour sous forme de DTO
-     * ou un statut HTTP 204 si le panier est vide.
-     */
-    @DeleteMapping("/{cartId}/products/{productId}")
-    public ResponseEntity<ShoppingCartDTO> removeProductFromCart(@PathVariable int cartId, @PathVariable int productId) {
-        shoppingCartService.removeProductFromCart(cartId, productId);
-        ShoppingCart cart = shoppingCartService.getShoppingCartById(cartId);
+    shoppingCartService.removeProductFromCart(cartId, productId, request.getSize());
 
-        if (cart.getCartProducts().isEmpty()) {
-            return ResponseEntity.noContent().build(); // Panier vide
-        }
-
-        ShoppingCartDTO updatedCart = new ShoppingCartDTO(cart);
-        return ResponseEntity.ok(updatedCart);
+    ShoppingCart cart = shoppingCartService.getShoppingCartById(cartId);
+    if (cart.getCartProducts().isEmpty()) {
+        return ResponseEntity.noContent().build();
     }
+
+    return ResponseEntity.ok(new ShoppingCartDTO(cart));
+}
+
+
 
     /**
      * Récupère un panier par son ID.
-     * <p>
+     *
      * Permet d'obtenir les détails d'un panier existant, y compris les produits qu'il contient.
      *
      * @param cartId L'ID du panier à récupérer.

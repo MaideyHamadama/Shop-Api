@@ -28,6 +28,9 @@ public class ShoppingCartLine {
     @Column(name = "total_price", nullable = false)
     private double totalPrice;
 
+    @Column(name = "size")
+    private String size;
+
     // ===========================
     //         Méthodes
     // ===========================
@@ -70,16 +73,25 @@ public class ShoppingCartLine {
      * @param product  Le produit de la ligne.
      * @param quantity La quantité du produit.
      */
-    public ShoppingCartLine(ShoppingCart cart, Product product, int quantity) {
+    public ShoppingCartLine(ShoppingCart cart, Product product, int quantity, String size) {
         this.product = product;
         this.shoppingCart = cart;
         this.quantity = quantity;
         this.totalPrice = product.getPrice() * quantity;
+        this.size = size;
     }
 
     // ===========================
     //     Getters et Setters
     // ===========================
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
 
     public int getId() {
         return id;
@@ -126,4 +138,3 @@ public class ShoppingCartLine {
         return shoppingCart.getTvaRate();
     }
 }
-

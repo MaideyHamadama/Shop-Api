@@ -6,26 +6,19 @@ import com.shop.backend.entity.Size;
 import com.shop.backend.entity.SizeType;
 
 public class SizeDTO {
-    private int id;
     private SizeType type;
     private AdultSize adultSize;
     private ChildSize childSize;
 
+    public SizeDTO() {
+    }
+
     public SizeDTO(Size size) {
-        this.id = size.getId();
         this.type = size.getType();
         this.adultSize = size.getAdultSize();
         this.childSize = size.getChildSize();
     }
 
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public SizeType getType() {
         return type;
@@ -51,4 +44,3 @@ public class SizeDTO {
         this.childSize = childSize;
     }
 }
-
